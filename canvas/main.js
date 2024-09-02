@@ -1,24 +1,41 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+const map_width = 90
+const map_height = 90
+const map = new Array(map_width * map_height)
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const preload = () => {
+	const width = (() => {
+		const cw = document.getElementById('app').clientWidth
+		const xu = cw >= 2560 ? 64
+		: cw <= 1280 ? 16
+		: 32
+		return {
+			view: Math.ceil((cw - xu) / xu),
+			unit: xu
+		}
+	})()
+	const height = (() => {
+		const ch = document.getElementById('app').clientHeight
+		const yu = ch >= 2560 ? 64
+		: ch <= 1280 ? 16
+		: 32
+		return {
+			view: Math.ceil((ch - yu) / yu),
+			unit: yu
+		}
+	})()
+	return {
+		width,
+		height
+	}
+}
 
-setupCounter(document.querySelector('#counter'))
+const load = (app) => {
+	const cvs = document.createElement('canvas')
+	cvs.width = map_width * app.width.unit
+	cvs.height = map_height * app.height.unit
+	app.cvs = cvs
+	const ctx = cvs.getContext('2d')
+	app.ctx = ctx
+	return app
+}
+
