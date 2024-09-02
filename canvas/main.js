@@ -10,7 +10,9 @@ const preload = () => {
 		: 32
 		return {
 			view: Math.ceil((cw - xu) / xu),
-			unit: xu
+			area: xu,
+			tile: xu / 2,
+			unit: xu / 8
 		}
 	})()
 	const height = (() => {
@@ -20,7 +22,9 @@ const preload = () => {
 		: 32
 		return {
 			view: Math.ceil((ch - yu) / yu),
-			unit: yu
+			area: yu,
+			tile: yu / 2,
+			unit: yu / 8
 		}
 	})()
 	return {
@@ -31,11 +35,18 @@ const preload = () => {
 
 const load = (app) => {
 	const cvs = document.createElement('canvas')
-	cvs.width = map_width * app.width.unit
-	cvs.height = map_height * app.height.unit
+	cvs.width = map_width * app.width.area
+	cvs.height = map_height * app.height.area
 	app.cvs = cvs
 	const ctx = cvs.getContext('2d')
 	app.ctx = ctx
-	return app
 }
 
+const generate = () => {}
+
+window.onload = () => {
+	const app = preload()
+	load(app)
+}
+
+window.onresize = () => {}
