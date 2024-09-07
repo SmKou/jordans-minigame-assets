@@ -1,8 +1,12 @@
 const maps from 'js/maps.js'
 
-const preload = () => {
-
-}
+/*
+ * Preload:
+ * Determine dimensions for app view
+ *
+ * Load:
+ * Create canvas elementgit
+ */
 
 const preload = () => {
 	const width = (() => {
@@ -29,19 +33,16 @@ const preload = () => {
 			unit: yu / 8
 		}
 	})()
-	return {
-		width,
-		height
-	}
+	return { width, height }
 }
 
 const load = (app) => {
+	const scene = maps['sample1']
 	const cvs = document.createElement('canvas')
-	cvs.width = map_width * app.width.area
-	cvs.height = map_height * app.height.area
+	cvs.width = scene.width * app.width.area
+	cvs.height = scene.height * app.height.area
 	app.cvs = cvs
-	const ctx = cvs.getContext('2d')
-	app.ctx = ctx
+	app.ctx = app.cvs.getContext('2d')
 }
 
 const generate = () => {}

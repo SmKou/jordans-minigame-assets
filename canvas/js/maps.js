@@ -1,3 +1,8 @@
+/*
+ * File: maps.js
+ * Details background and objects of maps
+ * Each map corresponds to route or town
+ */
 const sample_1 = {
 	width: 9,
 	height: 9,
@@ -17,4 +22,4 @@ const sample_1 = {
 	ground: {}
 }
 
-export default sample_1
+export default { sample1: sample_1 }
