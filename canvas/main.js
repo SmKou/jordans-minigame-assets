@@ -1,6 +1,8 @@
-const map_width = 90
-const map_height = 90
-const map = new Array(map_width * map_height)
+const maps from 'js/maps.js'
+
+const preload = () => {
+
+}
 
 const preload = () => {
 	const width = (() => {

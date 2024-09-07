@@ -16,3 +16,5 @@ const sample_1 = {
 	],
 	ground: {}
 }
+
+export default sample_1
