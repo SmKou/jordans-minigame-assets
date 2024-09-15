@@ -21,8 +21,15 @@ Humanoid creatures that manage and protect the creatures of an area to help, bef
 main.js
 
 data/
-- areas.js
-- tiles.js
+- areas.js:
+  Details of each area (map)
+  - background
+  - foreground: objects
+  - geos
+  - figs
+  - recurs
+- tiles.js:
+  Details of each tile type
 - geos.js
 - figs.js
 - recurs.js
