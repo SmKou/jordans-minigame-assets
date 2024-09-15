@@ -18,18 +18,11 @@ Humanoid creatures that manage and protect the creatures of an area to help, bef
 
 ### Project Structure
 
-Prototypes
-- canvas
-  - preload
-    - call-tiles
-      - pass-canvas.js
-      - pass-offscreen.js
-      - receive-offscreen.js
-      - receive-offscreens.js
-	- pass-to-tiles
-	  - pass-canvas.js
-	  - pass-offscreen.js
-	  - receive-offscreen.js
-	  - receive-offscreens.js
-  - load
-- pixi
+main.js
+
+data/
+- areas.js
+- tiles.js
+- geos.js
+- figs.js
+- recurs.js
