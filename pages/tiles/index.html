@@ -15,27 +15,26 @@
     </style>
   </head>
   <body>
-    <div id="app">
-		<canvas width="64" height="64" id="squares"></canvas>
-    </div>
     <script>
-		const dim = 64
+        const dim = 64
 		const tile = dim / 2
 		const unit = tile / 8
-
-		((squ) => {
-			const ctx = squ.getContext("2d")
-			ctx.strokeStyle("#000")
-			const size = [unit, unit / 2, unit /4, unit / 2]
-			for (const s of size) {
-				const x = Math.random() * (dim - unit * 2) + unit
-				const y = Math.random() * (dim - unit * 2) + unit
-				ctx.strokeRect(x, y, s, s)
-			}
-		})(
-			document
-			.getElementById("squares")
-		)
-    </script>
+        let ctx; 
+        </script>
+    <div id="app">
+		<canvas width="64" height="64" id="squ_1"></canvas>
+        <script>
+            ctx = document.getElementById("squ_1").getContext("2d")
+            ctx.strokeStyle = "#369"
+            ctx.lineWidth = 4
+            ctx.strokeRect(0, 0, dim, dim)
+        </script>
+        <canvas width="32" height="32" id="squ_2"></canvas>
+        <script>
+            ctx = document.getElementById("squ_2").getContext("2d")
+            ctx.strokeStyle = "#f00"
+            ctx.strokeRect(0, 0, tile, tile)
+        </script>
+    </div>
   </body>
 </html>
