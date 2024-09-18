@@ -1,3 +1,27 @@
+/* Shapes */
+const oval = ({ ctx, x, y, w, h, rot = false }) => {
+    console.log("oval")
+}
+
+const triangle = ({ ctx, x, y, size, rot = false, right = false, type = 0 } = {}) => {}
+
+const rect = ({ ctx, x, y, w, h, rot = false } = {}) => {}
+// includes: rhombus
+
+const trapezoid = ({ ctx, x, y, size, rot = false, rots = 0 } = {}) => {}
+
+const parallelogram = ({ ctx, x, y, size, rot = false, rots = 0, flip = false } = {}) => {}
+
+const pentagon = ({ ctx, x, y, size, rot = false, rots = 0 } = {}) => {}
+
+const hexagon = ({ ctx, x, y, size, rot = false } = {}) => {}
+
+const octagon = ({ ctx, x, y, size } = {}) => {}
+
+const star = ({ ctx, x, y, size, pts = 3, rot = false, rots = 0 } = {}) => {}
+
+/* Terrain tiles */
+
 const rock_terrain = document.getElementById("rock-terrain").getContext("2d")
 
 const cave_terrain = document.getElementById("cave-terrain").getContext("2d")
@@ -38,4 +62,5 @@ const bricks_terrain_2 = document.getElementById("bricks-terrain-2").getContext(
 
 const bricks_terrain_4 = document.getElementById("bricks-terrain-4").getContext("2d")
 
+// Pattern terrain
 const pavement_terrain = document.getElementById("pavement-terrain").getContext("2d")
