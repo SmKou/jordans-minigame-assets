@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototypal Designs</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            overflow: hidden;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+            font-family: sans-serif;
+        }
+
+        *::-webkit-scrollbar { display: none }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        main {
+            width: 100vw;
+            max-width: 800px;
+
+        }
+
+        section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+            gap: 12px;
+        }
+
+        canvas { border: 1px solid black }
+    </style>
+    <script>
+        const lim = 800 / 32
+        const [sheet] = window.document.styleSheets
+        for (let i = 2; i < lim; ++i) {
+            sheet.insertRule(`.col-${i} { grid-column: ${i} }`, sheet.cssRules.length)
+            sheet.insertRule(`.row-${i} { grid-row: $${i} }`, sheet.cssRules.length)
+        }
+    </script>
+</head>
+<body>
+    <main>
+        <section>
+            <canvas width="" height="" id=""></canvas>
+        </section>
+        <section>
+            <canvas width="" height="" id=""></canvas>
+        </section>
+        <section>
+            <canvas width="" height="" id=""></canvas>
+        </section>
+        <section>
+            <canvas width="" height="" id=""></canvas>
+        </section>
+        <section>
+            <canvas width="" height="" id=""></canvas>
+        </section>
+        <section>
+            <canvas width="" height="" id=""></canvas>
+        </section>
+    </main>
+    <!-- <script>
+        const lim = 800 / 32
+        for (let i = 2; i < lim; ++i) {
+            document.querySelectorAll(`.col-${i}`).forEach(col => col.style.gridColumn = i)
+            document.querySelectorAll(`.row-${i}`).forEach(row => row.style.gridRow = i)
+        }
+    </script> -->
+    <script src="tiles.js"></script>
+    <script src="objects.js"></script>
+    <script src="buildings.js"></script>
+    <script src="geos.js"></script>
+    <script src="figss.js"></script>
+    <script src="recurs.js"></script>
+</body>
+</html>
