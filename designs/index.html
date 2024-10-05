@@ -14,6 +14,10 @@
 
         *::-webkit-scrollbar { display: none }
 
+        :root {
+			--tile: 32px;
+        }
+
         body {
             width: 100vw;
             margin: 0;
@@ -31,61 +35,56 @@
         section {
             margin-bottom: 18px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+            grid-template-columns: repeat(auto-fit, var(--tile));
+            grid-template-rows: repeat(auto-fit, var(--tile));
+            gap: 8px;
             justify-items: center;
+            justify-content: center;
             align-items: center;
         }
 
         canvas { border: 1px solid black }
     </style>
-    <script>
-        const lim = 800 / 32
-        const [sheet] = window.document.styleSheets
-        for (let i = 2; i < lim; ++i) {
-            sheet.insertRule(`.col-${i} { grid-column: ${i} }`, sheet.cssRules.length)
-            sheet.insertRule(`.row-${i} { grid-row: $${i} }`, sheet.cssRules.length)
-        }
-    </script>
 </head>
 <body>
     <main>
         <section>
-            <canvas width="32" height="32" id="rock-terrain"></canvas>
-            <canvas width="32" height="32" id="cave-terrain"></canvas>
-            <canvas width="32" height="32" id="dirt-terrain"></canvas>
-            <canvas width="32" height="32" id="grass-terrain"></canvas>
-            <canvas width="32" height="32" id="water-terrain"></canvas>
-            <canvas width="32" height="32" id="deep-water-terrain"></canvas>
-            <canvas width="32" height="32" id="sludge-terrain"></canvas>
-            <canvas width="32" height="32" id="lava-rock-terrain"></canvas>
-            <canvas width="32" height="32" id="magma-terrain"></canvas>
-            <canvas width="32" height="32" id="ice-terrain"></canvas>
-            <canvas width="32" height="32" id="snow-terrain"></canvas>
-            <canvas width="32" height="32" id="planks-terrain-2v"></canvas>
-            <canvas width="32" height="32" id="planks-terrain-2h"></canvas>
-            <canvas width="32" height="32" id="planks-terrain-4v"></canvas>
-            <canvas width="32" height="32" id="planks-terrain-4h"></canvas>
-            <canvas width="32" height="32" id="planks-terrain-8v"></canvas>
-            <canvas width="32" height="32" id="planks-terrain-8h"></canvas>
-            <canvas width="32" height="32" id="bricks-terrain-1"></canvas>
-            <canvas width="32" height="32" id="bricks-terrain-2"></canvas>
-            <canvas width="32" height="32" id="bricks-terrain-4"></canvas>
-            <canvas width="32" height="32" id="pavement-terrain"></canvas>
+            <canvas id="rock-terrain"></canvas>
+            <canvas id="cave-terrain"></canvas>
+            <canvas id="dirt-terrain"></canvas>
+            <canvas id="grass-terrain"></canvas>
+            <canvas id="water-terrain"></canvas>
+            <canvas id="deep-water-terrain"></canvas>
+            <canvas id="sludge-terrain"></canvas>
+            <canvas id="lava-rock-terrain"></canvas>
+            <canvas id="magma-terrain"></canvas>
+            <canvas id="ice-terrain"></canvas>
+            <canvas id="snow-terrain"></canvas>
+            <canvas id="planks-terrain-2v"></canvas>
+            <canvas id="planks-terrain-2h"></canvas>
+            <canvas id="planks-terrain-4v"></canvas>
+            <canvas id="planks-terrain-4h"></canvas>
+            <canvas id="planks-terrain-8v"></canvas>
+            <canvas id="planks-terrain-8h"></canvas>
+            <canvas id="bricks-terrain-1"></canvas>
+            <canvas id="bricks-terrain-2"></canvas>
+            <canvas id="bricks-terrain-4"></canvas>
+            <canvas id="pavement-terrain"></canvas>
         </section>
         <section>
-            <canvas width="64" height="32" id="" class="col-2"></canvas>
+            <canvas id="" class="col-2"></canvas>
         </section> <!-- Objects -->
         <section>
-            <canvas width="" height="" id="" class=""></canvas>
+            <canvas id="" class=""></canvas>
         </section> <!-- Buildings -->
         <section>
-            <canvas width="" height="" id="" class=""></canvas>
+            <canvas id="" class=""></canvas>
         </section> <!-- Geos -->
         <section>
-            <canvas width="" height="" id="" class=""></canvas>
+            <canvas id="" class=""></canvas>
         </section> <!-- Figs -->
         <section>
-            <canvas width="" height="" id="" class=""></canvas>
+            <canvas id="" class=""></canvas>
         </section> <!-- Recurs -->
     </main>
     <!-- <script>
