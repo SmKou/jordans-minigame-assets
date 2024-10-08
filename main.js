@@ -5,8 +5,11 @@ const tile = block / 2
 const unit = tile / 8
 
 const town = (cvs) => {
-	cvs.width = 25 * block
-	cvs.height = 20 * block
+	const width = 25 * block * 2
+	const height = 20 * block * 2
+	console.log(width, height)
+	cvs.width = width
+	cvs.height = height
 	const ctx = cvs.getContext("2d")
 	ctx.fillStyle = "#000"
 	ctx.fillRect(0, 0, cvs.width, cvs.height)
@@ -96,15 +99,26 @@ const town = (cvs) => {
 		{ x: 1, y: 1 }
 	]
 	ctx.beginPath()
-	ctx.moveTo(boundary[0].x * block, boundary[0].y * block)
+	ctx.moveTo(boundary[0].x * block * 2, boundary[0].y * block * 2)
 	for (let i = 1; i < boundary.length; ++i)
-		ctx.lineTo(boundary[i].x * block, boundary[i].y * block)
+		ctx.lineTo(boundary[i].x * block * 2, boundary[i].y * block * 2)
 	ctx.lineWidth = 8
 	ctx.strokeStyle = "#aaa"
 	ctx.stroke()
 	ctx.fillStyle = "#fff"
 	ctx.fill()
 	ctx.closePath()
+	const color = 360 * Math.random()
+	ctx.beginPath()
+	ctx.moveTo(10 * block * 2, 9 * block * 2)
+	ctx.lineTo(10 * block * 2, 8 * block * 2)
+	ctx.lineTo(10 * block * 2 + block, 8 * block * 2)
+	ctx.lineTo(10 * block * 2 + block, 9 * block * 2)
+	ctx.strokeStyle = `hsl(${color}, 100%, 40%)`
+	ctx.stroke()
+	ctx.beginPath()
+	ctx.fillStyle = `hsl(${color}, 90%, 75%)`
+	ctx.fillRect(10 * block * 2, 8 * block * 2, block, 2 * block)
 	return cvs
 }
 
