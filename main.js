@@ -4,6 +4,21 @@ const block = 32
 const tile = block / 2
 const unit = tile / 8
 
+const map = {
+	width: 100,
+	height: 40,
+	edge: {
+		color: '#000',
+		points: [
+			'1-1'
+		]
+	}
+}
+
+const cvs = document.createElement('canvas')
+cvs.width = map.width * block
+cvs.height = map.height * block
+
 const town = (cvs) => {
 	const width = 25 * block * 2
 	const height = 20 * block * 2
