@@ -1,33 +1,3 @@
-/* Shapes */
-// const stroke = ({ ctx, r, g, b, a }) => ctx.fillStyle = `rgb(${r} ${g} ${b} / ${a}%)`
-// const fill = ({ ctx, r, g, b, a }) => ctx.strokeStyle = `rgb(${r} ${g} ${b} / ${a}%)`
-//
-// const oval = ({ ctx, x, y, w, h, rot = false }) => {
-//     const rad_x = w / 2
-//     const rad_y = h / 2
-//     ctx.translate(x, y)
-//     ctx.ellipse(0 - rad_x, 0 - rad_y, rad_x, rad_y, rot ? Math.PI / 2 : 0, 0, Math.PI * 2)
-// }
-//
-// const triangle = ({ ctx, x, y, size, rot = false, right = false, type = 0, rgba } = {}) => {}
-//
-// const rect = ({ ctx, x, y, w, h, rot = false, rgba } = {}) => {}
-// // includes: rhombus
-//
-// const trapezoid = ({ ctx, x, y, size, rot = false, rots = 0, rgba } = {}) => {}
-//
-// const parallelogram = ({ ctx, x, y, size, rot = false, rots = 0, flip = false, rgba } = {}) => {}
-//
-// const pentagon = ({ ctx, x, y, size, rot = false, rots = 0, rgba } = {}) => {}
-//
-// const hexagon = ({ ctx, x, y, size, rot = false, rgba } = {}) => {}
-//
-// const octagon = ({ ctx, x, y, size, rgba } = {}) => {}
-//
-// const star = ({ ctx, x, y, size, pts = 3, rot = false, rots = 0, rgba } = {}) => {}
-
-
-
 /* Terrain tiles */
 const tile = 32
 const half = tile / 2
