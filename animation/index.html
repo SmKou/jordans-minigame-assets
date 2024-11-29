@@ -6,26 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Animation</title>
     <style>
-		#exp-1 canvas {
-			width: 128px;
-			height: 32px;
+		body {
+			display: flex;
+			flex-direction: column;
 		}
 
-		#exp-2 canvas {
-			width: 32px;
-			height: 32px;
+		.container {
+			width: 64px;
+			height: 64px;
+			margin-bottom: 20px;
+			border: 0.1px solid gray;
 		}
 
-		#exp-3 .frame {
-			width: 32px;
-			height: 32px;
+		.exp-1 {
+			position: relative;
 		}
     </style>
   </head>
   <body>
-    <div id="exp-1" class="container">
-		<canvas></canvas>
-    </div>
+    <div id="exp-1" class="container"></div>
     <div id="exp-2" class="container">
 		<canvas></canvas>
     </div>

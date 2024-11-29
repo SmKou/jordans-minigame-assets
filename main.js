@@ -137,10 +137,10 @@ const town = (cvs) => {
 	return cvs
 }
 
-const pop_map = () => {
-	const app = document.getElementById("app")
-	const loader = document.querySelector(".loader")
-	app.removeChild(loader)
-	app.appendChild(town(document.createElement("canvas")))
-}
-pop_map()
+// const pop_map = () => {
+// 	const app = document.getElementById("app")
+// 	const loader = document.querySelector(".loader")
+// 	app.removeChild(loader)
+// 	app.appendChild(town(document.createElement("canvas")))
+// }
+// pop_map()
