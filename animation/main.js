@@ -76,17 +76,17 @@ const change_frame = () => {
 }
 change_frame()
 
+const deg = [0, 22.5, 45, 67.5]
+const trans = [
+	{ x: 0, y: 0 },
+	{ x: -unit / 4, y: -unit / 8},
+	{ x: -unit / 4, y: -unit / 4},
+	{ x: -unit / 4, y: -unit / 16}
+]
 
 const frames = (n) => {
 	const cvs = new OffscreenCanvas(block, block)
 	const ctx = cvs.getContext("2d")
-	const deg = [0, 22.5, 45, 67.5]
-	const trans = [
-		{ x: 0, y: 0 },
-		{ x: -unit / 4, y: -unit / 8},
-		{ x: -unit / 4, y: -unit / 4},
-		{ x: -unit / 4, y: -unit / 16}
-	]
 
 	ctx.translate(2 * unit, 2 * unit)
 	ctx.rotate(rad(deg[n]))
@@ -116,3 +116,28 @@ const draw_frame = () => {
 	setTimeout(draw_frame, delay)
 }
 draw_frame()
+
+for (let i = 0; i < deg.length; ++i) {
+	const cvs = document.createElement("canvas")
+	cvs.width = 64
+	cvs.height = 64
+	cvs.className = "frame-" + i
+
+	const ctx = cvs.getContext("2d")
+	ctx.drawImage(frames(i), 0, 0)
+
+	document.getElementById("exp-3").append(cvs)
+}
+
+let sframe = 0
+let z = 1
+const switch_frame = () => {
+	document.querySelector("#exp-3 canvas.frame-" + sframe).style.zIndex = z
+	const delay = sframe === 0 ? 900 : 300
+	z++
+	sframe++
+	if (sframe > 3)
+		sframe = 0
+	setTimeout(switch_frame, delay)
+}
+switch_frame()
