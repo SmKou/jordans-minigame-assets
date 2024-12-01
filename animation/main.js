@@ -16,18 +16,53 @@
  * Change order with z-index each frame
  */
 
-import init from '/exp_1.js'
-
-init(document.getElementById("exp-1"))
-
 const block = 64
 const unit = block / 4
-const rad = (deg) => deg * Math.PI / 180
 
-const cvs_exp_2 = document.querySelector("#exp-2 canvas")
-const exp_2 = cvs_exp_2.getContext("2d")
+const init = (ctn) => {
+	const cvs = document.createElement("canvas")
+	cvs.width = ctn.clientWidth * 4
+	cvs.height = ctn.clientHeight
 
+	cvs.style.position = "absolute"
+	cvs.style.left = "-192px"
 
-const cvs_exp_3 = document.querySelectorAll("#exp-3 canvas")
-const exp_3 = cvs_exp_3.map(cvs => cvs.getContext("2d"))
+	const ctx = cvs.getContext("2d")
 
+	const rad = (deg) => deg * Math.PI / 180
+
+	const frame = (deg = 0) => {
+		const cvs = new OffscreenCanvas(block, block)
+		const ctx = cvs.getContext("2d")
+
+		ctx.fillStyle = '#666'
+		ctx.fillRect(unit, 3 * unit - unit / 4, 2 * unit, unit / 4)
+
+		ctx.translate(2 * unit, 2 * unit)
+		ctx.rotate(rad(deg))
+		ctx.translate(-2 * unit, -2 * unit)
+
+		if (deg === 22.5)
+			ctx.translate(-unit / 4, -unit / 8)
+
+		if (deg === 45)
+			ctx.translate(-unit / 4, -unit / 4)
+
+		if (deg === 67.5)
+			ctx.translate(-unit / 4, -unit / 16)
+
+		ctx.fillStyle = '#000'
+		ctx.fillRect(unit, unit, 2 * unit, 2 * unit)
+
+		return cvs
+	}
+
+	ctx.drawImage(frame(0), 0, 0)
+	ctx.drawImage(frame(22.5), block, 0)
+	ctx.drawImage(frame(45), block * 2, 0)
+	ctx.drawImage(frame(67.5), block * 3, 0)
+
+	ctn.append(cvs)
+}
+
+init(document.getElementById("exp-1"))
