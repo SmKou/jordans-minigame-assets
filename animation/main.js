@@ -23,9 +23,7 @@ const init = (ctn) => {
 	const cvs = document.createElement("canvas")
 	cvs.width = ctn.clientWidth * 4
 	cvs.height = ctn.clientHeight
-
 	cvs.style.position = "absolute"
-	cvs.style.left = "-192px"
 
 	const ctx = cvs.getContext("2d")
 
@@ -35,8 +33,8 @@ const init = (ctn) => {
 		const cvs = new OffscreenCanvas(block, block)
 		const ctx = cvs.getContext("2d")
 
-		ctx.fillStyle = '#666'
-		ctx.fillRect(unit, 3 * unit - unit / 4, 2 * unit, unit / 4)
+		// ctx.fillStyle = '#666'
+		// ctx.fillRect(unit, 3 * unit - unit / 4, 2 * unit, unit / 4)
 
 		ctx.translate(2 * unit, 2 * unit)
 		ctx.rotate(rad(deg))
@@ -63,6 +61,20 @@ const init = (ctn) => {
 	ctx.drawImage(frame(67.5), block * 3, 0)
 
 	ctn.append(cvs)
+	return cvs
 }
 
-init(document.getElementById("exp-1"))
+const exp_1 = init(document.getElementById("exp-1"))
+
+let frame = 0
+const change_frame = () => {
+	exp_1.style.left = -1 * 64 * frame + "px"
+	const delay = frame ? 300 : 900
+	frame++
+	if (frame > 3)
+		frame = 0
+	setTimeout(change_frame, delay)
+}
+change_frame()
+
+
