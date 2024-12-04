@@ -141,3 +141,27 @@ const switch_frame = () => {
 	setTimeout(switch_frame, delay)
 }
 switch_frame()
+
+
+/* Slow down requestAnimationFrame */
+
+const ui = {
+	stop: false,
+	fps: 60,
+	then: Date.now(),
+	elapsed: 0
+}
+
+ui.fps_interval = 1000 / ui.fps
+ui.start_time = ui.then
+
+const animate = () => {
+	requestAnimationFrame(animate)
+	ui.now = Date.now()
+	ui.elapsed = ui.now - ui.then
+	const { elapsed, now, fps_interval } = ui
+	if (elapsed > fps_interval) {
+		ui.then = now - (elapsed % fps_interval)
+		// draw code
+	}
+}

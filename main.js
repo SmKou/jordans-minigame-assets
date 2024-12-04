@@ -1,5 +1,3 @@
-import './style.css'
-
 const block = 32
 const tile = block / 2
 const unit = tile / 8

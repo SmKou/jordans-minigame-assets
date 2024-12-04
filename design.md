@@ -1,5 +1,17 @@
 # Assets Design
 
+"6 Game Design Mistakes You MUST Avoid" (Thomas Brush, youtube)
+1. Show the problem before the solution
+   ex. lock for key, guide to lock then they find key
+2. Level design/dev is 5x more complicated than one thinks
+3. Give player mechanical choices / world choices > level design choices
+4. If player doesn't learn something can use to advantage in future => bored
+5. Don't be afraid to tell the player what's going on
+   - too much confusion => feeling of being blind
+6. When in doubt, surprise the player
+   - reveal mystery or something to reach the end for in first 10 min
+   - throw in funzies in dry spots
+
 Luther/Cassia was given two geos by their parents when they were five years old. Today, the two are missing somewhere in Undertown. Maybe the residents of Undertown can help them find the mischievous pair.
 
 **Prototype:**

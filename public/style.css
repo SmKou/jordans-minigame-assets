@@ -1,6 +1,5 @@
 * {
 	box-sizing: border-box;
-	overflow: hidden;
 	scrollbar-width: none;
 	scroll-behavior: smooth;
 	font-family: sans-serif;
@@ -15,6 +14,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	overflow: hidden;
 }
 
 #app {
@@ -23,8 +23,10 @@ body {
 	height: 100%;
 	border-radius: 18px;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	overflow-x: scroll;
 }
 
 @media screen and (min-width: 1280px) {
