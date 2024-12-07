@@ -18,7 +18,7 @@
 
 const block = 64
 const unit = block / 4
-const rad = (deg) => deg * Math.PI / 180
+const rad = (deg) =>
 
 const init = (ctn) => {
 	const cvs = document.createElement("canvas")

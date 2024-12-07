@@ -1,10 +1,8 @@
-const m = {
-	block: 32,
-	tile: 16,
-	half_tile: 8,
-	half_2: 4,
-	unit: 2
-}
+const block = 32
+const tile = block / 2
+const half_tile = tile / 2
+const half = half_tile / 2
+const unit = half / 2
 
 const walls = {
 	jagged: [
@@ -30,13 +28,13 @@ const walls = {
 					return cvs
 
 				ctx.beginPath()
-				ctx.moveTo(half_2, 0)
+				ctx.moveTo(half, 0)
 				ctx.lineTo(tile, half_tile)
-				ctx.moveTo(half_2, half_tile)
+				ctx.moveTo(half, half_tile)
 				ctx.lineTo(tile, tile)
 				ctx.strokeStyle = '#ddd'
 				ctx.stroke()
-				ctx.moveTo(half_2, 0)
+				ctx.moveTo(half, 0)
 				ctx.closePath()
 
 				return cvs
@@ -65,9 +63,9 @@ const walls = {
 
 				ctx.beginPath()
 				ctx.moveTo(0, half_tile)
-				ctx.lineTo(half_tile + half_2, 0)
+				ctx.lineTo(half_tile + half, 0)
 				ctx.moveTo(0, tile)
-				ctx.lineTo(half_tile + half_2, half_tile)
+				ctx.lineTo(half_tile + half, half_tile)
 				ctx.strokeStyle = '#ddd'
 				ctx.stroke()
 				ctx.moveTo(0, half_tile)
@@ -97,10 +95,10 @@ const walls = {
 				ctx.beginPath()
 				if (border >= 0) {
 					ctx.moveTo(0, half_tile)
-					ctx.lineTo(half_tile + half_2, 0)
+					ctx.lineTo(half_tile + half, 0)
 				}
 				if (border <= 0) {
-					ctx.moveTo(half_2, half_tile)
+					ctx.moveTo(half, half_tile)
 					ctx.lineTo(tile, tile)
 				}
 				ctx.strokeStyle = '#ddd'
@@ -130,10 +128,10 @@ const walls = {
 				ctx.beginPath()
 				if (border >= 0) {
 					ctx.moveTo(0, tile)
-					ctx.lineTo(half_tile + half_2, half_tile)
+					ctx.lineTo(half_tile + half, half_tile)
 				}
 				if (border <= 0) {
-					ctx.moveTo(half_2, 0)
+					ctx.moveTo(half, 0)
 					ctx.lineTo(tile, half_tile)
 				}
 				ctx.strokeStyle = '#ddd'
@@ -161,53 +159,67 @@ for (const type of Object.keys(walls)) {
 	}
 }
 
-const populate_right = (type, tile_idx, x = 5, y = 5) => {
-	const cvs = document.createElement("canvas")
-	cvs.width = block * x
-	cvs.height = block * y
+const gen_right = (type, tile_idx, width = 5) => {
+	const cvs = new OffscreenCanvas(block * width, tile)
 	const ctx = cvs.getContext("2d")
 
-
-	let next = walls[type][tile_idx]
-	for (let i = 0; i < (x * 2) * (y * 2); ++i) {
-		ctx.drawImage(next.draw(), (i % x) * tile, Math.floor(i / y) * tile)
-		next = walls[type][next.right()]
+	let curr = walls[type][tile]
+	for (;et i = 0; i < (block * width) / tile; ++i) {
+		ctx.drawImage(curr.draw(), i * tile, 0)
+		curr = walls[type][curr.right()]
 	}
 	return cvs
 }
 
-const populate_down = (type, tile_idx, x = 5, y = 5) => {
-	const cvs = document.createElement("canvas")
-	cvs.width = block * x
-	cvs.height = block * y
-	const ctx = cvs.getContext("2d")
-
-	const starts = new Array(y * 2)
-	let start = tile_idx
-	for (let i = 0; i < starts.length; ++i) {
-		starts[i] = start
-		start = walls[type][start].down(Math.random())
-	}
-
-	let next;
-	for (let i = 0; i < (x * 2) * (y * 2); ++i) {
-		if (i % (x * 2) === 0)
-			next = walls[type][starts[Math.floor(i / (y * 2)]]
-		for (let j = 0; j < x; ++j) {
-			ctx.drawImage(next.draw(), (i % x) * tile, Math.floor(i / y) * tile)
-			next = walls[type][next.right()]
-		}
-	}
-	return cvs
-}
-
-for (const type of Object.keys(walls)) {
-	const tile_ids = walls[type].length
-	for (let i = 0; i < tile_ids; ++i) {
-		wall_mats.append(populate_right(type, i))
-		wall_mats.append(populate_down(type, i))
-	}
-}
-
-const ground_tiles = document.querySelector(".ground.tiles")
-const ground_mats = document.querySelector(".ground.mats")
+const populate_right = (type, tile_idx, width = 5, height = 5) => {}
+//
+// const populate_right = (type, tile_idx, x = 5, y = 5) => {
+// 	const cvs = document.createElement("canvas")
+// 	cvs.width = block * x
+// 	cvs.height = block * y
+// 	const ctx = cvs.getContext("2d")
+//
+//
+// 	let next = walls[type][tile_idx]
+// 	for (let i = 0; i < (x * 2) * (y * 2); ++i) {
+// 		ctx.drawImage(next.draw(), (i % x) * tile, Math.floor(i / y) * tile)
+// 		next = walls[type][next.right()]
+// 	}
+// 	return cvs
+// }
+//
+// const populate_down = (type, tile_idx, x = 5, y = 5) => {
+// 	const cvs = document.createElement("canvas")
+// 	cvs.width = block * x
+// 	cvs.height = block * y
+// 	const ctx = cvs.getContext("2d")
+//
+// 	const starts = new Array(y * 2)
+// 	let start = tile_idx
+// 	for (let i = 0; i < starts.length; ++i) {
+// 		starts[i] = start
+// 		start = walls[type][start].down(Math.random())
+// 	}
+//
+// 	let next;
+// 	for (let i = 0; i < (x * 2) * (y * 2); ++i) {
+// 		if (i % (x * 2) === 0)
+// 			next = walls[type][starts[Math.floor(i / (y * 2)]]
+// 		for (let j = 0; j < x; ++j) {
+// 			ctx.drawImage(next.draw(), (i % x) * tile, Math.floor(i / y) * tile)
+// 			next = walls[type][next.right()]
+// 		}
+// 	}
+// 	return cvs
+// }
+//
+// for (const type of Object.keys(walls)) {
+// 	const tile_ids = walls[type].length
+// 	for (let i = 0; i < tile_ids; ++i) {
+// 		wall_mats.append(populate_right(type, i))
+// 		wall_mats.append(populate_down(type, i))
+// 	}
+// }
+//
+// const ground_tiles = document.querySelector(".ground.tiles")
+// const ground_mats = document.querySelector(".ground.mats")
