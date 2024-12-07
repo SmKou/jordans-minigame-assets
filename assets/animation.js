@@ -28,12 +28,14 @@ const trans = [
 
 const method_1 = {
 	init() {
+		const dim = block * 2
 		const ctn = document.createElement("div")
-		ctn.style.width = block + 'px'
-		ctn.style.height = block + 'px'
+		ctn.style.width = dim + 'px'
+		ctn.style.height = dim + 'px'
+		ctn.style.position = "relative"
 		const cvs = document.createElement("canvas")
-		cvs.width = block * 4
-		cvs.height = block
+		cvs.width = dim * 4
+		cvs.height = dim
 		cvs.style.position = 'absolute'
 		const ctx = cvs.getContext("2d")
 
@@ -75,7 +77,7 @@ const method_1 = {
 			ctn.style.left = -64 * frame + 'px'
 			const delay = frame ? 300 : 900
 			frame++
-			if (frame > 3)
+			if (frame >= deg.length)
 				frame = 0
 			setTimeout(change_frame, delay)
 		}
@@ -83,34 +85,34 @@ const method_1 = {
 	}
 }
 
+const frames = (n) => {
+	const cvs = new OffscreenCanvas(block, block)
+	const ctx = cvs.getContext("2d")
+
+	ctx.translate(2 * unit, 2 * unit)
+	ctx.rotate(rad(deg[n]))
+	ctx.translate(-2 * unit, -2 * unit)
+	ctx.translate(trans[n].x, trans[n].y)
+
+	ctx.fillStyle = '#000'
+	ctx.fillRect(unit, unit, 2 * unit, 2 * unit)
+
+	return cvs
+}
+
 const method_2 = {
 	init() {
-		const [width, height] = [block, block]
+		const dim = block * 2
 		const ctn = document.createElement("div")
-		ctx.style.width = width + 'px'
-		ctn.style.height = height + 'px'
+		ctx.style.width = dim + 'px'
+		ctn.style.height = dim + 'px'
 		const cvs = document.createElement("canvas")
-		cvs.width = width
-		cvs.height = height
+		cvs.width = dim
+		cvs.height = dim
 		ctn.append(cvs)
 		return ctn
 	},
 	draw(cvs, ctx = cvs.getContext("2d")) {
-		const frames = (n) => {
-			const cvs = new OffscreenCanvas(block, block)
-			const ctx = cvs.getContext("2d")
-
-			ctx.translate(2 * unit, 2 * unit)
-			ctx.rotate(rad(deg[n]))
-			ctx.translate(-2 * unit, -2 * unit)
-			ctx.translate(trans[n].x, trans[n].y)
-
-			ctx.fillStyle = '#000'
-			ctx.fillRect(unit, unit, 2 * unit, 2 * unit)
-
-			return cvs
-		}
-
 		let frame = 0
 		const change_frame = function() {
 			const cvs = frames(frame)
@@ -118,7 +120,7 @@ const method_2 = {
 			ctx,drawImage(ctx, 0, 0)
 			const delay = frame ? 300 : 900
 			frame++
-			if (frame > 3)
+			if (frame >= deg.length)
 				frame = 0
 			setTimeout(change_frame, delay)
 		}
@@ -128,65 +130,83 @@ const method_2 = {
 
 const method_3 = {
 	init() {
-		const [width, height] = [block, block]
-		const div = document.createElement("div")
-		div.style.width = width + 'px'
-		div.style.height = height + 'px'
+		const dim = block * 2
+		const ctn = document.createElement("div")
+		ctn.style.width = dim + 'px'
+		ctn.style.height = dim + 'px'
+		ctn.id = "anim-exp-3"
 
 		for (let i = 0; i < deg.length; ++i) {
 			const cvs = document.createElement("canvas")
-			cvs.width = block * 2
-			cvs.height = block * 2
+			cvs.width = dim
+			cvs.height = dim
+			cvs.className = 'frame-' + i
+
+			const ctx = cvs.getContext("2d")
+			ctx.drawImage(frames(i), 0, 0)
+
+			ctn.append(cvs)
 		}
 	},
-	draw() {}
-}
-
-for (let i = 0; i < deg.length; ++i) {
-	const cvs = document.createElement("canvas")
-	cvs.width = 64
-	cvs.height = 64
-	cvs.className = "frame-" + i
-
-	const ctx = cvs.getContext("2d")
-	ctx.drawImage(frames(i), 0, 0)
-
-	document.getElementById("exp-3").append(cvs)
-}
-
-let sframe = 0
-let z = 1
-const switch_frame = () => {
-	document.querySelector("#exp-3 canvas.frame-" + sframe).style.zIndex = z
-	const delay = sframe === 0 ? 900 : 300
-	z++
-	sframe++
-	if (sframe > 3)
-		sframe = 0
-		setTimeout(switch_frame, delay)
-}
-switch_frame()
-
-
-	/* Slow down requestAnimationFrame */
-
-	const ui = {
-		stop: false,
-		fps: 60,
-		then: Date.now(),
-		elapsed: 0
-	}
-
-	ui.fps_interval = 1000 / ui.fps
-	ui.start_time = ui.then
-
-	const animate = () => {
-		requestAnimationFrame(animate)
-		ui.now = Date.now()
-		ui.elapsed = ui.now - ui.then
-		const { elapsed, now, fps_interval } = ui
-		if (elapsed > fps_interval) {
-			ui.then = now - (elapsed % fps_interval)
-			// draw code
+	draw() {
+		let frame = 0
+		let z = 1
+		const change_frame = () => {
+			document.querySelector("#anim-exp-3 canvas.frame-" + frame).style.zIndex = z
+			const delay = frame ? 300 : 900
+			z++
+			frame++
+			if (frame >= deg.length)
+				frame = 0
+			setTimeout(change_frame, delay)
 		}
+		return change_frame
 	}
+}
+
+export default const methods = [
+	method_1,
+	method_2,
+	method_3
+]
+
+/*
+ * Slow down requestAnimationFrame
+ const ui = {
+	stop: false,
+	fps: 60,
+	then: Date.now(),
+	elapsed: 0
+ }
+
+ ui.fps_interval = 1000 / ui.fps
+ ui.start_time = ui.then
+
+ const animate = () => {
+	requestAnimationFrame(animate)
+	ui.now = Date.now()
+	ui.elapsed = ui.now - ui.then
+	const { elapsed, now, fps_interval } = ui
+	if (elapsed > fps_interval) {
+		ui.then = now - (elapsed % fps_interval)
+		// draw code
+	 }
+ }
+
+ * Issues with requestAnimationFrame:
+	Unknown frame rate
+	Because the callback is synced to the display refresh rate the frame rate will vary from device to device. You should use the time argument to determine the rate and adjust your animation as needed.
+
+	Forced Pause
+	Like other timers requestAnimationFrame will stop calling the callback when the page is hidden. Eg client switches Tabs, another window hides the browser window.
+
+	Unsynced
+	It is possible for the client to setup the GPU drivers and browser to ignore the display refresh rate. You can not detect this directly.
+
+	Render time
+	requestAnimationFrame assumes the time the callback returns is the frame that is being animated. It will not call next frame until after the next vSync
+
+	Taking too long to render a frame will cause requestAnimationFrame to skip frames resulting in Jank.
+
+ * 60 fps = 16.66...ms (1000 / 60)
+ */
