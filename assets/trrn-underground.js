@@ -102,7 +102,7 @@ const jagged = [
 
 const tiles = {
 	walls: () => {
-		const ctn = create_container(tile)
+		const ctn = create_container(tile + 'px')
 		for (let idx = 0; idx < jagged.length; ++idx) {
 			const cvs = document.createElement("canvas")
 			cvs.width = tile
@@ -138,6 +138,6 @@ export default (main) => {
 	for (const type of Object.keys(tiles))
 		main.append(tiles[type]())
 
-		for (const type of Object.keys(mats))
-			main.append(mats[type](5))
+	for (const type of Object.keys(mats))
+		main.append(mats[type](5))
 }
