@@ -1,11 +1,71 @@
 import { block, tile, half_tile, half, unit } from './data.js'
 import { create_container, mat_dim, gen_mats } from './fn.js'
 
+const any = (ttl, r) => {
+	const idx = Math.floor(r * 100 / (100 / ttl.length))
+	return ttl[idx]
+}
+
+// assumes first element is majority
+const major = (ttl, minor, r) => {
+	const minor_percent = (ttl.length - 1) * minor
+	const major_percent = 100 - minor_percent
+	if (r * 100 < major_percent)
+		return ttl[0]
+
+	const idx = Math.floor((r * 100 - major_percent) / minor) + 1
+	return ttl[idx]
+}
+
 const jagged = {
-	combos:
+	combos: [
+		['two_left_edge', 'two_right_edge'],
+		['overlapping_left', 'overlapping_right']
+	],
+	tiles: {
+		blank: {
+			right: () => major([
+				'blank',
+				'two_left_edge',
+				'overlapping_left'
+			], 15, Math.random()),
+			down: () => major([
+				'blank',
+				'two_left_edge',
+				'two_right_edge',
+				'overlapping_left',
+				'overlapping_right'
+			], 10, Math.random()),
+			draw() {
+				const cvs = new OffscreenCanvas(tile, tile)
+				const ctx = cvs.getContext("2d", { alpha: false })
+				return cvs
+			}
+		},
+		two_left_edge: {
+			right: () => 'two_right_edge',
+			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
+			draw(border = 0) {}
+		},
+		two_right_edge: {
+			right: () => any(),
+			down: () => major(Object.keys(jagged.tiles), 15, Math.random())
+		}
+		overlapping_left: {
+			right: () => 'overlapping_right',
+			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
+			draw(border = 0) {}
+		},
+		overlapping_right: {
+			right: () => {},
+			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
+			draw(border = 0) {}
+		}
+	}
 }
 
 [
+
 	{ // Two left-edge
 		right: () => 2,
 		down: (r) => {
