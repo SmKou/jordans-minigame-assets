@@ -45,132 +45,141 @@ const jagged = {
 		two_left_edge: {
 			right: () => 'two_right_edge',
 			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
-			draw(border = 0) {}
+			draw(border = 0) {
+				const cvs = new OffscreenCanvas(tile, tile)
+				const ctx = cvs.getContext("2d", { alpha: false })
+				if (border > 0)
+					return cvs
+				ctx.beginPath()
+				ctx.moveTo(half, 0)
+				ctx.lineTo(tile, half_tile)
+				ctx.moveTo(half, half_tile)
+				ctx.lineTo(tile, tile)
+				ctx.strokeStyle = '#ddd'
+				ctx.stroke()
+				return cvs
+			}
 		},
 		two_right_edge: {
 			right: () => any(),
-			down: () => major(Object.keys(jagged.tiles), 15, Math.random())
+			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
+			draw(border = 0) {
+				const cvs = new OffscreenCanvas(tile, tile)
+				const ctx = cvs.getContext("2d", { alpha: false })
+				if (border < 0)
+					return cvs
+				ctx.beginPath()
+				ctx.moveTo(0, half_tile)
+				ctx.lineTo(half_tile + half, 0)
+				ctx.moveTo(0, tile)
+				ctx.lineTo(half_tile + half, half_tile)
+				ctx.strokeStyle = '#ddd'
+				ctx.stroke()
+				return cvs
+			}
 		}
 		overlapping_left: {
 			right: () => 'overlapping_right',
 			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
-			draw(border = 0) {}
+			draw(border = 0) {
+				const cvs = new OffscreenCanvas(tile, tile)
+				const ctx = cvs.getContext("2d", { alpha: false })
+				ctx.beginPath()
+				if (border >= 0) {
+					ctx.moveTo(0, half_tile)
+					ctx.lineTo(half_tile + half, 0)
+				}
+				if (border <= 0) {
+					ctx.moveTo(half, half_tile)
+					ctx.lineTo(tile, tile)
+				}
+				ctx.strokeStyle = '#ddd'
+				ctx.stroke()
+				return cvs
+			}
 		},
 		overlapping_right: {
 			right: () => {},
 			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
-			draw(border = 0) {}
+			draw(border = 0) {
+				const cvs = new OffscreenCanvas(tile, tile)
+				const ctx = cvs.getContext("2d", { alpha: false })
+				ctx.beginPath()
+				if (border >= 0) {
+					ctx.moveTo(0, tile)
+					ctx.lineTo(half_tile + half, half_tile)
+				}
+				if (border <= 0) {
+					ctx.moveTo(half, 0)
+					ctx.lineTo(tile, half_tile)
+				}
+				ctx.strokeStyle = '#ddd'
+				ctx.stroke()
+				return cvs
+			}
 		}
 	}
 }
 
-[
-
-	{ // Two left-edge
-		right: () => 2,
-		down: (r) => {
-			if (r < .3) return 0
-			if (r < .6) return 1
-			if (r < .8) return 2
-			return 3
-		},
-		draw(border = 0) {
-			const cvs = new OffscreenCanvas(tile, tile)
-			const ctx = cvs.getContext("2d", { alpha: false })
-			if (border > 0)
-				return cvs
-			ctx.beginPath()
-			ctx.moveTo(half, 0)
-			ctx.lineTo(tile, half_tile)
-			ctx.moveTo(half, half_tile)
-			ctx.lineTo(tile, tile)
-			ctx.strokeStyle = '#ddd'
-			ctx.stroke()
-			return cvs
-		}
-	},
-	{ // Two right-edge
-		right: (r) => {
-			if (r < .7)
-				return -1
-			return 0
-		},
-		down: (r) => {
-			if (r < .3) return 1
-			if (r < .6) return 0
-			if (r < .8) return 3
-			return 2
-		},
-		draw(border = 0) {
-			const cvs = new OffscreenCanvas(tile, tile)
-			const ctx = cvs.getContext("2d", { alpha: false })
-			if (border < 0)
-				return cvs
-			ctx.beginPath()
-			ctx.moveTo(0, half_tile)
-			ctx.lineTo(half_tile + half, 0)
-			ctx.moveTo(0, tile)
-			ctx.lineTo(half_tile + half, half_tile)
-			ctx.strokeStyle = '#ddd'
-			ctx.stroke()
-			return cvs
-		}
-	},
-	{ // Overlapping left-edge
-		right: () => 3,
-		down: (r) => {
-			if (r < .3) return 2
-			if (r < .6) return 3
-			if (r < .8) return 0
-			return 1
-		},
-		draw(border = 0) {
-			const cvs = new OffscreenCanvas(tile, tile)
-			const ctx = cvs.getContext("2d", { alpha: false })
-			ctx.beginPath()
-			if (border >= 0) {
-				ctx.moveTo(0, half_tile)
-				ctx.lineTo(half_tile + half, 0)
-			}
-			if (border <= 0) {
-				ctx.moveTo(half, half_tile)
-				ctx.lineTo(tile, tile)
-			}
-			ctx.strokeStyle = '#ddd'
-			ctx.stroke()
-			return cvs
-		}
-	},
-	{ // Overlapping right-edge
-		right: (r) => {
-			if (r < .7)
-				return -1
-			return 2
-		},
-		down: (r) => {
-			if (r < .3) return 3
-			if (r < .6) return 2
-			if (r < .8) return 1
-			return 0
-		},
-		draw(border = 0) {
-			const cvs = new OffscreenCanvas(tile, tile)
-			const ctx = cvs.getContext("2d", { alpha: false })
-			ctx.beginPath()
-			if (border >= 0) {
-				ctx.moveTo(0, tile)
-				ctx.lineTo(half_tile + half, half_tile)
-			}
-			if (border <= 0) {
-				ctx.moveTo(half, 0)
-				ctx.lineTo(tile, half_tile)
-			}
-			ctx.strokeStyle = '#ddd'
-			ctx.stroke()
-			return cvs
-		}
-	}
-]
+// [
+//
+// 	{ // Two left-edge
+// 		right: () => 2,
+// 		down: (r) => {
+// 			if (r < .3) return 0
+// 			if (r < .6) return 1
+// 			if (r < .8) return 2
+// 			return 3
+// 		},
+// 		draw(border = 0) {
+//
+// 		}
+// 	},
+// 	{ // Two right-edge
+// 		right: (r) => {
+// 			if (r < .7)
+// 				return -1
+// 			return 0
+// 		},
+// 		down: (r) => {
+// 			if (r < .3) return 1
+// 			if (r < .6) return 0
+// 			if (r < .8) return 3
+// 			return 2
+// 		},
+// 		draw(border = 0) {
+//
+// 		}
+// 	},
+// 	{ // Overlapping left-edge
+// 		right: () => 3,
+// 		down: (r) => {
+// 			if (r < .3) return 2
+// 			if (r < .6) return 3
+// 			if (r < .8) return 0
+// 			return 1
+// 		},
+// 		draw(border = 0) {
+//
+// 		}
+// 	},
+// 	{ // Overlapping right-edge
+// 		right: (r) => {
+// 			if (r < .7)
+// 				return -1
+// 			return 2
+// 		},
+// 		down: (r) => {
+// 			if (r < .3) return 3
+// 			if (r < .6) return 2
+// 			if (r < .8) return 1
+// 			return 0
+// 		},
+// 		draw(border = 0) {
+//
+// 		}
+// 	}
+// ]
 
 const tiles = {
 	walls: () => {
