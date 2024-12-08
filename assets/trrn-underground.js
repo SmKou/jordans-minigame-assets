@@ -1,4 +1,5 @@
-import { block, tile, half_tile, half, unit } from 'data.js'
+import { block, tile, half_tile, half, unit } from './data.js'
+import { create_container, mat_dim, gen_mats } from './fn.js'
 
 const jagged = [
 	{ // Two left-edge
@@ -99,58 +100,44 @@ const jagged = [
 	}
 ]
 
-const create_container = (repeat_size) => {
-	const ctn = document.createElement("div")
-	ctn.style.marginBottom = `${tile}px`
-	ctn.style.display = 'grid'
-	ctn.style.gridTemplateColumns = `repeat(auto-fit, ${repeat_size})`
-	ctn.style.gap = `${tile}px`
-	return ctn
-}
-
 const tiles = {
 	walls: () => {
 		const ctn = create_container(tile)
-		for (let i = 0; i < jagged.length; ++i) {
+		for (let idx = 0; idx < jagged.length; ++idx) {
 			const cvs = document.createElement("canvas")
 			cvs.width = tile
 			cvs.height = tile
-			cvs.getContext("2d").drawImage(jagged[i].draw(), 0, 0)
+			cvs.getContext("2d").drawImage(jagged[idx].draw(), 0, 0)
 			ctn.append(cvs)
 		}
 		return ctn
 	}
 }
 
-const mat_dim = (n) => block * n
-const gen_right = (tiles, idx, width = 5) => {
-	const ord = [idx]
-	while (ord.length < width) {
-		const last_idx = ord.length - 1
-		curr = tiles[ord[last_idx]].right()
-		ord.push(curr)
-	}
-	return ord
-}
-
-const gen_down = (tiles, ids, width = 5, height = 5) => {
-	while (ids.length < height)
-		ids.push(Math.floor(Math.random() * tiles.length))
-
-	const ord = []
-	for (let i = 0; i < ids.length; ++i)
-		ord.push(...gen_right(tiles, ids[i], width))
-
-	return ord
-}
-
-const gen_mat = (tiles, width, height) => {
-
-}
-
 const mats = {
 	walls: (n) => {
 		const ctn = create_container(`minmax(${mat_dim(n)}px, 1fr)`)
+		const mats = gen_mats(tiles, n * 2, n * 2)
+		for (let idx = 0; idx < mats.length; ++idx) {
+			const cvs = document.createElement("canvas")
+			cvs.width = mat_dim(n)
+			cvs.height = mat_dim(n)
+			for (let y = 0; y < mats[idx].length; ++y)
+				for (let x = 0; x < mats[idx][y].length; ++x) {
+					const tile_idx = mats[y][x]
+					const tile = tiles[tile_idx]
+					cvs.drawImage(tile.draw(), x * tile, y * tile)
+				}
+			ctn.append(cvs)
+		}
 		return ctn
 	}
+}
+
+export default (main) => {
+	for (const type of Object.keys(tiles))
+		main.append(tiles[type]())
+
+		for (const type of Object.keys(mats))
+			main.append(mats[type](5))
 }
