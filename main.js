@@ -8,20 +8,19 @@ const ui = {
 	content: ''
 }
 
-const assets = {
-	trrn: {
-		underground
-	}
-}
-
-const clear = (elm = main) => {
-	while (elm.firstChild)
-		elm.removeChild(elm.firstChild)
-}
-
 const erase = () => {
 	ui.type = ''
 	ui.content = ''
+}
+
+const assets = {
+	trrn: { underground }
+}
+
+const clear = (e) => {
+	if (!e) e = main
+	while (e.firstChild)
+		e.removeChild(e.firstChild)
 }
 
 const add_option = (text) => {

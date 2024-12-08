@@ -1,9 +1,13 @@
 import { block, tile, half_tile, half, unit } from './data.js'
 import { create_container, mat_dim, gen_mats } from './fn.js'
 
-const jagged = [
+const jagged = {
+	combos:
+}
+
+[
 	{ // Two left-edge
-		right: () => 1,
+		right: () => 2,
 		down: (r) => {
 			if (r < .3) return 0
 			if (r < .6) return 1
@@ -26,7 +30,11 @@ const jagged = [
 		}
 	},
 	{ // Two right-edge
-		right: () => 0,
+		right: (r) => {
+			if (r < .7)
+				return -1
+			return 0
+		},
 		down: (r) => {
 			if (r < .3) return 1
 			if (r < .6) return 0
@@ -74,7 +82,11 @@ const jagged = [
 		}
 	},
 	{ // Overlapping right-edge
-		right: () => 2,
+		right: (r) => {
+			if (r < .7)
+				return -1
+			return 2
+		},
 		down: (r) => {
 			if (r < .3) return 3
 			if (r < .6) return 2
@@ -111,27 +123,36 @@ const tiles = {
 			ctn.append(cvs)
 		}
 		return ctn
-	}
+	},
+	// ground: () => {}
 }
 
 const mats = {
 	walls: (n) => {
+		const tn = n * 2
 		const ctn = create_container(`minmax(${mat_dim(n)}px, 1fr)`)
-		const mats = gen_mats(tiles, n * 2, n * 2)
+		const mats = gen_mats(jagged, tn, tn)
 		for (let idx = 0; idx < mats.length; ++idx) {
 			const cvs = document.createElement("canvas")
 			cvs.width = mat_dim(n)
 			cvs.height = mat_dim(n)
-			for (let y = 0; y < mats[idx].length; ++y)
-				for (let x = 0; x < mats[idx][y].length; ++x) {
-					const tile_idx = mats[y][x]
-					const tile = tiles[tile_idx]
-					cvs.drawImage(tile.draw(), x * tile, y * tile)
-				}
+			const ctx = cvs.getContext("2d", { alpha: false })
+			for (let i = 0; i < mats[idx].length; ++i) {
+				const x = i % tn
+				const y = Math.floor(i / tn)
+				const tile_idx = mats[idx][i]
+				if (tile_idx < 0)
+					continue;
+				const border = x === 0 ? -1
+					: x === tn - 1 ? 1
+					: 0
+				ctx.drawImage(jagged[tile_idx].draw(border), x * tile, y * tile)
+			}
 			ctn.append(cvs)
 		}
 		return ctn
-	}
+	},
+	// ground: (n) => {}
 }
 
 export default (main) => {
