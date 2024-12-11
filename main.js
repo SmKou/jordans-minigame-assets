@@ -61,5 +61,16 @@ types.addEventListener("change", e => {
 content.addEventListener("change", e => {
 	ui.content = e.target.value
 	clear()
-	assets[ui.type][ui.content](main)
+
+	const select_asset = assets[ui.type][ui.content]
+	switch (ui.type) {
+		case 'trrn':
+			console.log(select_asset)
+			for (const tile_set of Object.keys(select_asset.tiles))
+				main.append(select_asset.tiles[tile_set]())
+			for (const tile_mat of Object.keys(select_asset.mats))
+				main.append(select_asset.mats[tile_mat]())
+			break;
+
+	}
 })

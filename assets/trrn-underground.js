@@ -35,7 +35,7 @@ const jagged = {
 				'two_right_edge',
 				'overlapping_left',
 				'overlapping_right'
-			], 10, Math.random()),
+			], 5, Math.random()),
 			draw() {
 				const cvs = new OffscreenCanvas(tile, tile)
 				const ctx = cvs.getContext("2d", { alpha: false })
@@ -44,7 +44,7 @@ const jagged = {
 		},
 		two_left_edge: {
 			right: () => 'two_right_edge',
-			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
+			down: () => major(Object.keys(jagged.tiles), 5, Math.random()),
 			draw(border = 0) {
 				const cvs = new OffscreenCanvas(tile, tile)
 				const ctx = cvs.getContext("2d", { alpha: false })
@@ -61,8 +61,8 @@ const jagged = {
 			}
 		},
 		two_right_edge: {
-			right: () => any(),
-			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
+			right: () => major(Object.keys(jagged.tiles), 5, Math.random()),
+			down: () => major(Object.keys(jagged.tiles), 5, Math.random()),
 			draw(border = 0) {
 				const cvs = new OffscreenCanvas(tile, tile)
 				const ctx = cvs.getContext("2d", { alpha: false })
@@ -77,10 +77,10 @@ const jagged = {
 				ctx.stroke()
 				return cvs
 			}
-		}
+		},
 		overlapping_left: {
 			right: () => 'overlapping_right',
-			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
+			down: () => major(Object.keys(jagged.tiles), 5, Math.random()),
 			draw(border = 0) {
 				const cvs = new OffscreenCanvas(tile, tile)
 				const ctx = cvs.getContext("2d", { alpha: false })
@@ -99,7 +99,7 @@ const jagged = {
 			}
 		},
 		overlapping_right: {
-			right: () => {},
+			right: () => major(Object.keys(jagged.tiles), 5, Math.random()),
 			down: () => major(Object.keys(jagged.tiles), 15, Math.random()),
 			draw(border = 0) {
 				const cvs = new OffscreenCanvas(tile, tile)
@@ -121,74 +121,14 @@ const jagged = {
 	}
 }
 
-// [
-//
-// 	{ // Two left-edge
-// 		right: () => 2,
-// 		down: (r) => {
-// 			if (r < .3) return 0
-// 			if (r < .6) return 1
-// 			if (r < .8) return 2
-// 			return 3
-// 		},
-// 		draw(border = 0) {
-//
-// 		}
-// 	},
-// 	{ // Two right-edge
-// 		right: (r) => {
-// 			if (r < .7)
-// 				return -1
-// 			return 0
-// 		},
-// 		down: (r) => {
-// 			if (r < .3) return 1
-// 			if (r < .6) return 0
-// 			if (r < .8) return 3
-// 			return 2
-// 		},
-// 		draw(border = 0) {
-//
-// 		}
-// 	},
-// 	{ // Overlapping left-edge
-// 		right: () => 3,
-// 		down: (r) => {
-// 			if (r < .3) return 2
-// 			if (r < .6) return 3
-// 			if (r < .8) return 0
-// 			return 1
-// 		},
-// 		draw(border = 0) {
-//
-// 		}
-// 	},
-// 	{ // Overlapping right-edge
-// 		right: (r) => {
-// 			if (r < .7)
-// 				return -1
-// 			return 2
-// 		},
-// 		down: (r) => {
-// 			if (r < .3) return 3
-// 			if (r < .6) return 2
-// 			if (r < .8) return 1
-// 			return 0
-// 		},
-// 		draw(border = 0) {
-//
-// 		}
-// 	}
-// ]
-
 const tiles = {
 	walls: () => {
 		const ctn = create_container(tile + 'px')
-		for (let idx = 0; idx < jagged.length; ++idx) {
+		for (const tile_name of Object.keys(jagged.tiles)) {
 			const cvs = document.createElement("canvas")
 			cvs.width = tile
 			cvs.height = tile
-			cvs.getContext("2d").drawImage(jagged[idx].draw(), 0, 0)
+			cvs.getContext("2d").drawImage(jagged.tiles[tile_name].draw(), 0, 0)
 			ctn.append(cvs)
 		}
 		return ctn
@@ -224,10 +164,4 @@ const mats = {
 	// ground: (n) => {}
 }
 
-export default (main) => {
-	for (const type of Object.keys(tiles))
-		main.append(tiles[type]())
-
-	for (const type of Object.keys(mats))
-		main.append(mats[type](5))
-}
+export default { tiles, mats }
