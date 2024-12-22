@@ -1,11 +1,9 @@
-export const block = 32
-
-export const tile = 16
-
-export const half_tile = 8
-
-export const half = 4
-
-export const unit = 2
+export const units = {
+	block: 64,
+	tile: this.block / 2,
+	half_tile: this.tile / 2,
+	half: this.half_tile / 2,
+	unit: this.half / 2
+}
 
 export const rad = (deg) => deg * Math.PI / 180
