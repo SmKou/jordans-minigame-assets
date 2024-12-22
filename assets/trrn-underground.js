@@ -1,22 +1,3 @@
-import { block, tile, half_tile, half, unit } from './data.js'
-import { create_container, mat_dim, gen_mats } from './fn.js'
-
-const any = (ttl, r) => {
-	const idx = Math.floor(r * 100 / (100 / ttl.length))
-	return ttl[idx]
-}
-
-// assumes first element is majority
-const major = (ttl, minor, r) => {
-	const minor_percent = (ttl.length - 1) * minor
-	const major_percent = 100 - minor_percent
-	if (r * 100 < major_percent)
-		return ttl[0]
-
-	const idx = Math.floor((r * 100 - major_percent) / minor) + 1
-	return ttl[idx]
-}
-
 const jagged = {
 	combos: [
 		['two_left_edge', 'two_right_edge'],
