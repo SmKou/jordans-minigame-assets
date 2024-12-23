@@ -1,3 +1,4 @@
+import sprite from './assets/anim-sprite.js'
 import underground from './assets/trrn-underground.js'
 
 const types = document.getElementById("asset-type-select")
@@ -14,6 +15,7 @@ const erase = () => {
 }
 
 const assets = {
+	anim: { sprite },
 	trrn: { underground }
 }
 
@@ -64,12 +66,11 @@ content.addEventListener("change", e => {
 
 	const select_asset = assets[ui.type][ui.content]
 	switch (ui.type) {
+		case 'anim':
+			main.append(select_asset())
+			break;
 		case 'trrn':
 			console.log(select_asset)
-			for (const tile_set of Object.keys(select_asset.tiles))
-				main.append(select_asset.tiles[tile_set]())
-			for (const tile_mat of Object.keys(select_asset.mats))
-				main.append(select_asset.mats[tile_mat]())
 			break;
 
 	}
