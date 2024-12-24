@@ -18,12 +18,11 @@ import { units, rad, create_grid_container } from './data.js'
  * Change order with z-index each frame
  *
  * Achieve 60 fps with requestAnimationFrame: fps_interval = 1000 / fps
- *
 const ui = {
 	stop: false,
-	fps: 60,
-	then: Date.now(),
-	elapsed: 0
+	* fps: 60,
+	* then: Date.now(),
+	* elapsed: 0
 }
 
 ui.fps_interval = 1000 / ui.fps
@@ -39,6 +38,14 @@ const animate = () => {
 		// draw code
 	}
 }
+ */
+
+/*
+ * BUG Frames rotate off canvas
+ *
+ * Experiment: Performance(setTimeout, requestAnimationFrame)
+ * 1. Player-like object: 7 side-frames, 7 back-frames, move(up, down, left, right)
+ * 2. High quantity of moving objects: 100
  */
 
 const { block, tile, half_tile, half } = units
@@ -95,6 +102,16 @@ const frames = function(n) {
 	return cvs
 }
 
+const sample = {
+	container: create_container("View positions", { width: block * 4 + 'px' }),
+	canvas: create_canvas(4, { width: block, height: block },
+		function(cvs, i) { cvs.getContext("2d").drawImage(frames(i), 0, 0) }
+	),
+	draw: function() {
+		return () => {}
+	}
+}
+
 const contained_canvas_position = {
 	container: create_container("Draw each frame to portion of canvas and each frame, move canvas with css position", { overflow: 'hidden' }),
 	canvas: create_canvas(1, { width: block * 4, height: block, position: 'absolute' },
@@ -104,98 +121,99 @@ const contained_canvas_position = {
 				ctx.drawImage(frames(i), block * i, 0)
 		}
 	),
+	// draw: function(arr) {
+	// 	const ui = {
+	// 		fps_interval: 900,
+	// 		frame: 0
+	// 	}
+ //
+	// 	const cvs = arr[0]
+ //
+	// 	const draw = function() {
+	// 		cvs.style.left = `${-block * ui.frame}px`
+	// 		ui.fps_interval = ui.frame ? 300 : 900
+	// 		ui.frame++
+	// 		if (ui.frame >= deg.length)
+	// 			ui.frame = 0
+	// 			setTimeout(draw, ui.fps_interval)
+	// 	}
+	// 	return draw
+	// }
 	draw: function(arr) {
 		const ui = {
 			fps_interval: 900,
-			frame: 0
+			frame: 0,
+			then: Date.now(),
+			elapsed: 0
 		}
 
 		const cvs = arr[0]
 
 		const draw = function() {
-			cvs.style.left = `${-block * ui.frame}px`
-			ui.fps_interval = ui.frame ? 300 : 900
-			ui.frame++
-			if (ui.frame >= deg.length)
-				ui.frame = 0
-				setTimeout(draw, ui.fps_interval)
+			requestAnimationFrame(draw)
+			ui.now = Date.now()
+			ui.elapsed = ui.now - ui.then
+			if (ui.elapsed > ui.fps_interval) {
+				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+				cvs.style.left = `${-block * ui.frame}px`
+				ui.fps_interval = ui.frame ? 300 : 900
+				ui.frame++
+				if (ui.frame >= deg.length)
+					ui.frame = 0
+			}
 		}
 		return draw
 	}
-// 	draw: function(cvs) {
-// 		const ui = {
-// 			fps_interval: 900,
-// 			frame: 0,
-// 			then: Date.now(),
-// 			elapsed: 0
-// 		}
-//
-// 		const draw = function() {
-// 			requestAnimationFrame(draw)
-// 			ui.now = Date.now()
-// 			ui.elapsed = ui.now - ui.then
-// 			if (ui.elapsed > ui.fps_interval) {
-// 				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-// 				cvs.style.left = `${-block * ui.frame}px`
-// 				ui.fps_interval = ui.frame ? 300 : 900
-// 				ui.frame++
-// 				if (ui.frame >= deg.length)
-// 					ui.frame = 0
-// 			}
-// 		}
-// 		return draw
-// 	}
 }
 
 const canvas_redraw = {
 	container: create_container("Draw each frame", {}),
 	canvas: create_canvas(1, { width: block, height: block }, (cvs) => cvs),
+	// draw: function(arr) {
+	// 	const ui = {
+	// 		fps_interval: 900,
+	// 		frame: 0
+	// 	}
+ //
+	// 	const ctx = arr[0].getContext("2d")
+ //
+	// 	const draw = () => {
+	// 		ctx.clearRect(0, 0, block, block)
+	// 		ctx.drawImage(frames(ui.frame), 0, 0)
+	// 		ui.fps_interval = ui.frame ? 300 : 900
+	// 		ui.frame++
+	// 		if (ui.frame >= deg.length)
+	// 			ui.frame = 0
+	// 			setTimeout(draw, ui.fps_interval)
+	// 	}
+	// 	return draw
+	// }
 	draw: function(arr) {
 		const ui = {
 			fps_interval: 900,
-			frame: 0
+			frame: 0,
+			then: Date.now(),
+			elapsed: 0
 		}
 
-		const cvs = arr[0]
-		const ctx = cvs.getContext("2d")
+		const ctx = arr[0].getContext("2d")
 
 		const draw = () => {
-			ctx.clearRect(0, 0, block, block)
-			ctx.drawImage(frames(ui.frame), 0, 0)
-			ui.fps_interval = ui.frame ? 300 : 900
-			ui.frame++
-			if (ui.frame >= deg.length)
-				ui.frame = 0
-				setTimeout(draw, ui.fps_interval)
+			requestAnimationFrame(draw)
+			ui.now = Date.now()
+			ui.elapsed = ui.now - ui.then
+			if (ui.elapsed > ui.fps_interval) {
+				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+				ctx.clearRect(0, 0, block, block)
+				ctx.drawImage(frames(ui.frame), 0, 0)
+				ui.fps_interval = ui.frame ? 300 : 900
+				ui.frame++
+				if (ui.frame >= deg.length)
+					ui.frame = 0
+			}
 		}
 		return draw
 	}
-// 	draw: function(cvs) {
-// 		const ui = {
-// 			fps_interval: 900,
-// 			frame: 0,
-// 			then: Date.now(),
-// 			elapsed: 0
-// 		}
-//
-// 		const ctx = cvs.getContext("2d")
-//
-// 		const draw = () => {
-// 			requestAnimationFrame(draw)
-// 			ui.now = Date.now()
-// 			ui.elapsed = ui.now - ui.then
-// 			if (ui.elapsed > ui.fps_interval) {
-// 				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-// 				ctx.clearRect(0, 0, block, block)
-// 				ctx.drawImage(frames(ui.frame), 0, 0)
-// 				ui.fps_interval = ui.frame ? 300 : 900
-// 				ui.frame++
-// 				if (ui.frame >= deg.length)
-// 					ui.frame = 0
-// 			}
-// 		}
-// 		return draw
-// 	}
 }
 
 const cycle_frame_layer = {
@@ -206,54 +224,54 @@ const cycle_frame_layer = {
 			ctx.drawImage(frames(i), 0, 0)
 		}
 	),
+	// draw: function(arr) {
+	// 	const ui = {
+	// 		fps_interval: 900,
+	// 		frame: 0,
+	// 		z: 1
+	// 	}
+ //
+	// 	const draw = () => {
+	// 		arr[ui.frame].style.zIndex = ui.z
+	// 		ui.fps_interval = ui.frame ? 300 : 900
+	// 		ui.z++
+	// 		ui.frame++
+	// 		if (ui.frame >= deg.length)
+	// 			ui.frame = 0
+	// 		setTimeout(draw, ui.fps_interval)
+	// 	}
+	// 	return draw
+	// }
 	draw: function(arr) {
 		const ui = {
 			fps_interval: 900,
 			frame: 0,
+			then: Date.now(),
+			elapsed: 0,
 			z: 1
 		}
 
 		const draw = () => {
-			arr[ui.frame].style.zIndex = ui.z
-			ui.fps_interval = ui.frame ? 300 : 900
-			ui.z++
-			ui.frame++
-			if (ui.frame >= deg.length)
-				ui.frame = 0
-			setTimeout(draw, ui.fps_interval)
+			requestAnimationFrame(draw)
+			ui.now = Date.now()
+			ui.elapsed = ui.now - ui.then
+			if (ui.elapsed > ui.fps_interval) {
+				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+				arr[ui.frame].style.zIndex = ui.z
+				ui.fps_interval = ui.frame ? 300 : 900
+				ui.z++
+				ui.frame++
+				if (ui.frame >= deg.length)
+					ui.frame = 0
+			}
 		}
 		return draw
 	}
-// 	draw: function() {
-// 		const ui = {
-// 			fps_interval: 900,
-// 			frame: 0,
-// 			then: Date.now(),
-// 			elapsed: 0,
-// 			z: 1
-// 		}
-//
-// 		const draw = () => {
-// 			requestAnimationFrame(draw)
-// 			ui.now = Date.now()
-// 			ui.elapsed = ui.now - ui.then
-// 			if (ui.elapsed > ui.fps_interval) {
-// 				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-// 				document.querySelector('frame-' + ui.frame).style.zIndex = ui.z
-// 				ui.fps_interval = ui.frame ? 300 : 900
-// 				ui.z++
-// 				ui.frame++
-// 				if (ui.frame >= deg.length)
-// 					ui.frame = 0
-// 			}
-// 		}
-// 		return draw
-// 	}
 }
 
 const generate = (main) => {
 	const grid = create_grid_container()
-	const methods = [contained_canvas_position, canvas_redraw, cycle_frame_layer]
+	const methods = [contained_canvas_position, canvas_redraw, cycle_frame_layer, sample]
 	const run_proc = []
 	for (const {container, canvas, draw} of methods) {
 		const ctnr_elm = container()
