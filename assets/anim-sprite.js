@@ -41,278 +41,232 @@ const animate = () => {
 }
  */
 
-const deg = [0, 22.5, 45, 67.5]
+const { block, tile, half_tile, half } = units
 
-const { block, unit } = units
-const trans = [
-	{ x: 0, y: 0 },
-	{ x: -unit / 4, y: -unit / 8},
-	{ x: -unit / 4, y: -unit / 4},
-	{ x: -unit / 4, y: -unit / 16}
-]
-
-const create_container = (txt) => {
+const create_container = (caption, props) => function() {
 	const container = document.createElement("div")
-	container.title = txt
+	container.title = caption
 	container.style.position = "relative"
-	container.style.width = `${units.block * 2}px`
-	container.style.height = `${units.block * 2}px`
-	container.style.overflow = "hidden"
+	container.style.width = block + 'px'
+	container.style.height = block + 'px'
+	for (const prop of Object.keys(props))
+		container.style[prop] = props[prop]
+	console.log(container)
 	return container
 }
 
-const frames = (n) => {
+const create_canvas = (qty, props, init) => function() {
+	const { width, height, ...css_props } = props
+	const create = (i) => {
+		const cvs = document.createElement("canvas")
+		cvs.width = width
+		cvs.height = height
+		for (const prop of Object.keys(css_props))
+			cvs.style[prop] = css_props[prop]
+		init(cvs, i)
+		return cvs
+	}
+
+	const canvas = []
+	for (let i = 0; i < qty; ++i)
+		canvas.push(create(i))
+	return canvas
+}
+
+const deg = [0, 22.5, 45, 67.5]
+const trans = [
+	{ x: 0, y: 0 },
+	{ x: -half / 4, y: -half / 4},
+	{ x: -half / 4, y: -half / 2},
+	{ x: -half / 4, y: -half / 8}
+]
+
+const frames = function(n) {
 	const cvs = new OffscreenCanvas(block, block)
 	const ctx = cvs.getContext("2d")
-
-	ctx.translate(2 * unit, 2 * unit)
+	ctx.translate(half_tile, half_tile)
 	ctx.rotate(rad(deg[n]))
-	ctx.translate(-2 * unit, -2 * unit)
+	ctx.translate(-half_tile, -half_tile)
 	ctx.translate(trans[n].x, trans[n].y)
 
 	ctx.fillStyle = '#000'
-	ctx.fillRect(unit, unit, 2 * unit, 2 * unit)
+	ctx.fillRect(half, half, tile, tile)
 
 	return cvs
 }
 
-const contained_canvas_position = () => {
-	const container = create_container("Draw each frame to portion of canvas and each frame, move canvas with css position")
-
-
-
-	const add_canvas = (fig) => {
-		const cvs = document.createElement("canvas")
-		cvs.width = units.block * 8
-		cvs.height = units.block * 2
-		cvs.style.position = "absolute"
-
-		const ctx = cvs.getContext("2d")
-
-		const frame = (deg) => {
-
-			const cvs = new OffscreenCanvas(block, block)
+const contained_canvas_position = {
+	container: create_container("Draw each frame to portion of canvas and each frame, move canvas with css position", { overflow: 'hidden' }),
+	canvas: create_canvas(1, { width: block * 4, height: block, position: 'absolute' },
+		function(cvs) {
 			const ctx = cvs.getContext("2d")
-			ctx.translate(2 * unit, 2 * unit)
-			ctx.rotate(rad(deg))
-			ctx.translate(-2 * unit, -2 * unit)
-			switch (deg) {
-				case deg[1]:
-					ctx.translate(-unit / 4, -unit / 8)
-					break;
-				case deg[2]:
-					ctx.translate(-unit / 4, -unit / 4)
-					break;
-				case deg[3]:
-					ctx.translate(-unit / 4, -unit / 16)
-					break;
-			}
-			ctx.fillStyle = "#000"
-			ctx.fillRect(unit, unit, 2 * unit, 2 * unit)
-			return cvs
+			for (let i = 0; i < deg.length; ++i)
+				ctx.drawImage(frames(i), block * i, 0)
 		}
-
-		for (let i = 0; i < deg.length; ++i)
-			ctx.drawImage(frame(deg[0]), block * i, 0)
-
-		fig.append(cvs)
-		return { fig, cvs }
-	}
-
-	const add_draw = (cvs, mode) => {
+	),
+	draw: function(arr) {
 		const ui = {
 			fps_interval: 900,
 			frame: 0
 		}
 
-		const draw_proc = () => {
-			cvs.style.left = `${-(units.block * 2) * ui.frame}px`
+		const cvs = arr[0]
+
+		const draw = function() {
+			cvs.style.left = `${-block * ui.frame}px`
 			ui.fps_interval = ui.frame ? 300 : 900
 			ui.frame++
 			if (ui.frame >= deg.length)
 				ui.frame = 0
-		}
-
-		if (mode) {
-			const draw = () => {
-				draw_proc()
-				setTimeout(draw, delay)
-			}
-			return draw
-		}
-
-		ui.then = Date.now()
-		ui.elapsed = 0
-
-		const draw = () => {
-			requestAnimationFrame(draw)
-			ui.now = Date.now()
-			ui.elapsed = ui.now - ui.then
-			if (ui.elapsed > ui.fps_interval) {
-				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-				draw_proc()
-			}
+				setTimeout(draw, ui.fps_interval)
 		}
 		return draw
 	}
-
-	const st = add_canvas(create_container())
-	const raf = add_canvas(create_container())
-
-	return [
-		{ container: add_caption(st.fig, caption), draw: add_draw(st.cvs) },
-		{ container: add_caption(raf.fig, caption, false), draw: add_draw(raf.cvs, false) }
-	]
+// 	draw: function(cvs) {
+// 		const ui = {
+// 			fps_interval: 900,
+// 			frame: 0,
+// 			then: Date.now(),
+// 			elapsed: 0
+// 		}
+//
+// 		const draw = function() {
+// 			requestAnimationFrame(draw)
+// 			ui.now = Date.now()
+// 			ui.elapsed = ui.now - ui.then
+// 			if (ui.elapsed > ui.fps_interval) {
+// 				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+// 				cvs.style.left = `${-block * ui.frame}px`
+// 				ui.fps_interval = ui.frame ? 300 : 900
+// 				ui.frame++
+// 				if (ui.frame >= deg.length)
+// 					ui.frame = 0
+// 			}
+// 		}
+// 		return draw
+// 	}
 }
 
-const canvas_redraw = () => {
-	const caption = "Draw each frame"
+const canvas_redraw = {
+	container: create_container("Draw each frame", {}),
+	canvas: create_canvas(1, { width: block, height: block }, (cvs) => cvs),
+	draw: function(arr) {
+		const ui = {
+			fps_interval: 900,
+			frame: 0
+		}
 
-	const add_canvas = (fig) => {
-		const cvs = document.createElement("canvas")
-		cvs.width = units.block * 2
-		cvs.height = units.block * 2
-		fig.append(cvs)
-		return { fig, cvs }
-	}
-
-	const add_draw = (cvs, mode = true) => {
-
+		const cvs = arr[0]
 		const ctx = cvs.getContext("2d")
 
-		const ui = {
-			fps_interval: 900,
-			frame: 0
-		}
-
-		const draw_proc = () => {
-			const next_frame = frames(ui.frame)
+		const draw = () => {
 			ctx.clearRect(0, 0, block, block)
-			ctx.drawImage(next_frame, 0, 0)
+			ctx.drawImage(frames(ui.frame), 0, 0)
 			ui.fps_interval = ui.frame ? 300 : 900
 			ui.frame++
 			if (ui.frame >= deg.length)
 				ui.frame = 0
-		}
-
-		if (mode) {
-			const draw = () => {
-				draw_proc()
 				setTimeout(draw, ui.fps_interval)
-			}
-			return draw
-		}
-
-		ui.then = Date.now()
-		ui.elapsed = 0
-
-		const draw = () => {
-			requestAnimationFrame(draw)
-			ui.now = Date.now()
-			ui.elapsed = ui.now - ui.then
-			if (ui.elapsed > ui.fps_interval) {
-				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-				draw_proc()
-			}
 		}
 		return draw
 	}
-
-	const st = add_canvas(create_container())
-	const raf = add_canvas(create_container())
-
-	return [
-		{ container: add_caption(st.fig, caption), draw: add_draw(st.cvs) },
-		{ container: add_caption(raf.fig, caption, false), draw: add_draw(raf.cvs, false) }
-	]
+// 	draw: function(cvs) {
+// 		const ui = {
+// 			fps_interval: 900,
+// 			frame: 0,
+// 			then: Date.now(),
+// 			elapsed: 0
+// 		}
+//
+// 		const ctx = cvs.getContext("2d")
+//
+// 		const draw = () => {
+// 			requestAnimationFrame(draw)
+// 			ui.now = Date.now()
+// 			ui.elapsed = ui.now - ui.then
+// 			if (ui.elapsed > ui.fps_interval) {
+// 				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+// 				ctx.clearRect(0, 0, block, block)
+// 				ctx.drawImage(frames(ui.frame), 0, 0)
+// 				ui.fps_interval = ui.frame ? 300 : 900
+// 				ui.frame++
+// 				if (ui.frame >= deg.length)
+// 					ui.frame = 0
+// 			}
+// 		}
+// 		return draw
+// 	}
 }
 
-const cycle_frame_layer = () => {
-	const caption = "Draw canvas for each frame, and each frame, change order with z-index"
-
-	const add_canvas = (fig, mode = true) => {
-		const z_frames = []
-		for (let i = 0; i < deg.length; ++i) {
-			const cvs = document.createElement("canvas")
-			cvs.width = units.block * 2
-			cvs.height = units.block * 2
-			cvs.className = `frame-${i}`
-
+const cycle_frame_layer = {
+	container: create_container("Draw canvas for each frame, and each frame, change order with z-index", {}),
+	canvas: create_canvas(deg.length, { width: block, height: block, position: 'absolute', background: 'white' },
+		function(cvs, i) {
 			const ctx = cvs.getContext("2d")
 			ctx.drawImage(frames(i), 0, 0)
-
-			z_frames.push(cvs)
-			fig.append(cvs)
 		}
-		return { fig, z_frames }
-	}
-
-	const add_draw = (z_frames, mode = true) => {
+	),
+	draw: function(arr) {
 		const ui = {
 			fps_interval: 900,
 			frame: 0,
 			z: 1
 		}
 
-		const draw_proc = () => {
-			z_frames[ui.frame].style.zIndex = ui.z
+		const draw = () => {
+			arr[ui.frame].style.zIndex = ui.z
 			ui.fps_interval = ui.frame ? 300 : 900
 			ui.z++
 			ui.frame++
 			if (ui.frame >= deg.length)
 				ui.frame = 0
-		}
-
-		if (mode) {
-			const draw = () => {
-				draw_proc()
-				setTimeout(draw, ui.fps_interval)
-			}
-			return draw
-		}
-
-		ui.then = Date.now()
-		ui.elapsed = 0
-
-		const draw = () => {
-			requestAnimationFrame(draw)
-			ui.now = Date.now()
-			ui.elapsed = ui.now - ui.then
-			if (ui.elapsed > ui.fps_interval) {
-				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-				draw_proc()
-			}
+			setTimeout(draw, ui.fps_interval)
 		}
 		return draw
 	}
-
-	const st = add_canvas(create_container())
-	const raf = add_canvas(create_container(), false)
-
-	return [
-		{ container: add_caption(st.fig, caption), draw: add_draw(st.z_frames) },
-		{ container: add_caption(raf.fig, caption, false), draw: add_draw(raf.z_frames, false) }
-	]
+// 	draw: function() {
+// 		const ui = {
+// 			fps_interval: 900,
+// 			frame: 0,
+// 			then: Date.now(),
+// 			elapsed: 0,
+// 			z: 1
+// 		}
+//
+// 		const draw = () => {
+// 			requestAnimationFrame(draw)
+// 			ui.now = Date.now()
+// 			ui.elapsed = ui.now - ui.then
+// 			if (ui.elapsed > ui.fps_interval) {
+// 				ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+// 				document.querySelector('frame-' + ui.frame).style.zIndex = ui.z
+// 				ui.fps_interval = ui.frame ? 300 : 900
+// 				ui.z++
+// 				ui.frame++
+// 				if (ui.frame >= deg.length)
+// 					ui.frame = 0
+// 			}
+// 		}
+// 		return draw
+// 	}
 }
 
-const generate = () => {
+const generate = (main) => {
 	const grid = create_grid_container()
-	const elms = [
-		...contained_canvas_position(),
-		...canvas_redraw(),
-		...cycle_frame_layer()
-	]
-	for (const e of elms) {
-		const { container, draw } = e
-		grid.append(container)
-		draw()
+	const methods = [contained_canvas_position, canvas_redraw, cycle_frame_layer]
+	const run_proc = []
+	for (const {container, canvas, draw} of methods) {
+		const ctnr_elm = container()
+		const cvs_elms = canvas()
+		ctnr_elm.append(...cvs_elms)
+		grid.append(ctnr_elm)
+		run_proc.push(draw(cvs_elms))
 	}
-	return grid
+	main.append(grid)
+	return run_proc
 }
 
 export default generate
-
-
 
  /* Issues with requestAnimationFrame:
 	Unknown frame rate

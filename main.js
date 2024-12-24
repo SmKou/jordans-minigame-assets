@@ -67,7 +67,9 @@ content.addEventListener("change", e => {
 	const select_asset = assets[ui.type][ui.content]
 	switch (ui.type) {
 		case 'anim':
-			main.append(select_asset())
+			const actions = select_asset(main)
+			for (const action of actions)
+				action()
 			break;
 		case 'trrn':
 			console.log(select_asset)
