@@ -1,4 +1,4 @@
-import { units, rad, create_grid_container } from './data.js'
+import { units, rad, create_grid_container, create_container, create_canvas } from './data.js'
 
 /*
  * Animation: rolling square
@@ -49,37 +49,6 @@ const animate = () => {
  */
 
 const { block, tile, half_tile, half } = units
-
-const create_container = (caption, props) => function() {
-	const container = document.createElement("div")
-	container.title = caption
-	container.style.position = "relative"
-	container.style.width = block + 'px'
-	container.style.height = block + 'px'
-	for (const prop of Object.keys(props))
-		container.style[prop] = props[prop]
-	console.log(container)
-	return container
-}
-
-const create_canvas = (qty, props, init) => function() {
-	const { width, height, ...css_props } = props
-	const create = (i) => {
-		const cvs = document.createElement("canvas")
-		cvs.width = width
-		cvs.height = height
-		for (const prop of Object.keys(css_props))
-			cvs.style[prop] = css_props[prop]
-		init(cvs, i)
-		return cvs
-	}
-
-	const canvas = []
-	for (let i = 0; i < qty; ++i)
-		canvas.push(create(i))
-	return canvas
-}
-
 const deg = [0, 22.5, 45, 67.5]
 const trans = [
 	{ x: 0, y: 0 },
@@ -107,9 +76,7 @@ const sample = {
 	canvas: create_canvas(4, { width: block, height: block },
 		function(cvs, i) { cvs.getContext("2d").drawImage(frames(i), 0, 0) }
 	),
-	draw: function() {
-		return () => {}
-	}
+	draw: () => () => {}
 }
 
 const contained_canvas_position = {

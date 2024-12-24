@@ -18,9 +18,31 @@ export const create_grid_container = () => {
 	return container
 }
 
-export const create_containers = (content) => {
-	const frag = new DocumentFragment()
-	for (const container of content)
-		frag.append(container)
-	return frag
+export const create_container = (caption, props) => function() {
+	const { width, height, ...css_props } = props
+	const container = document.createElement("div")
+	container.title = caption
+	container.style.position = "relative"
+	container.style.width = width ? width + 'px' : block + 'px'
+	container.style.height = height ? height + 'px' : block + 'px'
+	for (const prop of Object.keys(props))
+		container.style[prop] = props[prop]
+	return container
+}
+
+export const create_canvas = (qty, props, init) => function() {
+	const { width, height, ...css_props } = props
+	const canvas = []
+	const create = idx => {
+		const cvs = document.createElement("canvas")
+		cvs.width = width ? width : block
+		cvs.height = height ? height : block
+		for (const prop of Object.keys(css_props))
+			cvs.style[prop] = css_props[prop]
+		init(cvs, idx)
+		return cvs
+	}
+	for (let i = 0; i < qty; ++i)
+		canvas.push(create(i))
+	return canvas
 }

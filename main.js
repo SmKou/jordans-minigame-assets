@@ -32,7 +32,6 @@ const add_option = (text) => {
 }
 
 types.addEventListener("change", e => {
-	console.log(e)
 	erase()
 	ui.type = e.target.value
 	clear(content)
@@ -62,7 +61,6 @@ types.addEventListener("change", e => {
 })
 
 content.addEventListener("change", e => {
-	console.log(e)
 	ui.content = e.target.value
 	clear()
 
