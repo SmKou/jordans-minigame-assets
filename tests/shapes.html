@@ -1,0 +1,83 @@
+<body>
+	<script>
+		(() => {
+			let cvs = document.createElement("canvas")
+			cvs.width = 64
+			cvs.height = 64
+			let ctx = cvs.getContext("2d")
+			ctx.fillStyle = "#F00"
+			ctx.fillRect(0, 0, 64, 64)
+			document.querySelector("body").append(cvs)
+
+			cvs = document.createElement("canvas")
+			cvs.width = 64
+			cvs.height = 64
+			ctx = cvs.getContext("2d")
+			ctx.fillStyle = "#00F"
+			ctx.fillRect(16, 16, 32, 32)
+			document.querySelector("body").append(cvs)
+		})()
+
+		const block = 32
+		const tile = block / 2
+		const half_tile = tile / 2
+		const half = half_tile / 2
+		const unit = half / 2
+
+		const rect = ({ x, y, width, height, extend, fill, stroke }) => {
+			const cvs = new OffscreenCanvas(block, block)
+			const ctx = cvs.getContext("2d")
+			ctx.beginPath()
+			ctx.moveTo(x, y)
+			ctx.lineTo(x + width, y)
+			if (!extend || extend === '') {
+				ctx.lineTo(x + width, y + height)
+				ctx.lineTo(x, y + height)
+				ctx.lineTo(x, y)
+				if (fill) {
+					ctx.fillStyle = fill
+					ctx.fill()
+				}
+				if (stroke) {
+					ctx.strokeStyle = stroke
+					ctx.stroke()
+				}
+				return cvs
+			}
+
+			const extension = extend.includes("up") || extend.includes("down") ? height / 4
+			: width / 4
+			const transform = {
+				left: [
+
+				],
+				right: [],
+				up: {
+					left: [],
+					right: []
+				},
+				down: {
+					left: [],
+					right: []
+				}
+			}
+		}
+		const ellipse = () => {}
+		const trapezoid = () => {}
+		const rhombus = () => {}
+		const parallelogram = () => {}
+		const triangle = () => {}
+		const pentagon = () => {}
+		const hexagon = () => {}
+		const octagon = () => {}
+
+
+		const shapes = []
+		for (const shape of shapes) {
+			const cvs = document.createElement("canvas")
+			cvs.width = 100
+			cvs.height = 100
+			const ctx = cvs.getContext("2d")
+		}
+	</script>
+</body>
