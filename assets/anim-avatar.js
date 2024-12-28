@@ -1,13 +1,29 @@
 import { units, rad, create_grid_container, create_container, create_canvas } from './data.js'
 
 const { block, tile, half_tile, half } = units
-const side_matrices = []
-const back_matrices = []
+const side_matrices = [
+	{ fst: [], snd: [] },
+	{ fst: [], snd: [] },
+	{ fst: [], snd: [] },
+	{ fst: [], snd: [] },
+	{ fst: [], snd: [] },
+	{ fst: [], snd: [] }
+]
+const back_matrices = [
+	[],
+	[],
+	[],
+	[],
+	[],
+	[]
+]
 
 const sample_side = {
 	container: create_container("Frames of side view", { width: block, height: block }),
 	canvas: create_canvas(6, { width: block, height: block },
-		function(cvs, i) {}
+		function(cvs, i) {
+			const ctx = cvs.getContext("2d")
+		}
 	)
 }
 
