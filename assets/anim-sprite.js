@@ -52,29 +52,39 @@ const { block, tile, half_tile, half } = units
 const deg = [0, 22.5, 45, 67.5]
 const trans = [
 	{ x: 0, y: 0 },
-	{ x: -half / 4, y: -half / 4},
-	{ x: -half / 4, y: -half / 2},
-	{ x: -half / 4, y: -half / 8}
+	{ x: half, y: -half},
+	{ x: half, y: -half},
+	{ x: half, y: -half}
 ]
 
-const frames = function(n) {
-	const cvs = new OffscreenCanvas(block, block)
+const frames = function(n, width = block, height = block) {
+    const x_offset = width - block > 0 ? (width - block) / 2 : 0
+    const y_offset = height - block > 0 ? (height - block) / 2 : 0
+	const cvs = new OffscreenCanvas(width, height)
 	const ctx = cvs.getContext("2d")
-	ctx.translate(half_tile, half_tile)
+
+    ctx.strokeStyle = "#000"
+    ctx.beginPath()
+    ctx.moveTo(x_offset + half, y_offset + half + tile)
+    ctx.lineTo(x_offset + half + tile, y_offset + half + tile)
+    ctx.stroke()
+    ctx.closePath()
+
+    ctx.translate(trans[n].x, trans[n].y)
+	ctx.translate(x_offset + half_tile, x_offset + half_tile)
 	ctx.rotate(rad(deg[n]))
-	ctx.translate(-half_tile, -half_tile)
-	ctx.translate(trans[n].x, trans[n].y)
+	ctx.translate(-x_offset - half_tile, -y_offset - half_tile)
 
 	ctx.fillStyle = '#000'
-	ctx.fillRect(half, half, tile, tile)
+	ctx.fillRect(x_offset + half,y_offset + half, tile, tile)
 
 	return cvs
 }
 
 const sample = {
-	container: create_container("View positions", { width: block * 4 + 'px' }),
-	canvas: create_canvas(4, { width: block, height: block },
-		function(cvs, i) { cvs.getContext("2d").drawImage(frames(i), 0, 0) }
+	container: create_container("View positions", { width: block * 4 * 2 + 'px', height: block * 2 }),
+	canvas: create_canvas(4, { width: block * 2, height: block * 2 },
+		function(cvs, i) { cvs.getContext("2d").drawImage(frames(i, block * 2, block * 2), 0, 0) }
 	),
 	draw: () => () => {}
 }
