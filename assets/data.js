@@ -8,13 +8,16 @@ export const units = { block, tile, half_tile, half, unit }
 
 export const rad = (deg) => deg * Math.PI / 180
 
-export const create_grid_container = () => {
+export const create_grid_container = (props) => {
 	const container = document.createElement("section")
 	container.style.width = "100%"
 	container.style.marginBottom = `${tile}px`
 	container.style.display = "flex"
 	container.style.flexWrap = "wrap"
 	container.style.alignItems = "center"
+    if (props)
+        for (const prop of Object.keys(props))
+            container.style[prop] = props[prop]
 	return container
 }
 
