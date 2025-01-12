@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyes</title>
+</head>
+<body>
+    <script>
+        const tile = 64
+        const half_tile = tile / 2
+        const half = half_tile / 2
+        const unit = half / 2
+
+        const heads = [
+            ctx => ctx.ellipse(half_tile, half_tile, half + unit, half + unit, 0, 0, Math.PI * 2), // circle
+            ctx => ctx.rect(unit, unit, half_tile + half, half_tile + half), // square
+            ctx => {
+                ctx.moveTo(unit, unit)
+                ctx.lineTo(tile - unit, unit)
+                ctx.lineTo(tile / 2, tile - unit)
+                ctx.lineTo(unit, unit)
+            }, // triangle
+            ctx => {
+                ctx.moveTo(half, unit)
+                ctx.lineTo(tile / 2, tile / 2 - unit)
+                ctx.lineTo(tile - half, unit)
+                ctx.lineTo(tile - unit, tile - unit)
+                ctx.lineTo(tile / 2, tile/2 + unit)
+                ctx.lineTo(unit, tile - unit)
+                ctx.lineTo(half, unit)
+            }, // double triangle
+            ctx => {
+                ctx.moveTo(unit, unit)
+                ctx.lineTo(tile / 2, half + unit)
+                ctx.lineTo(tile - unit, unit)
+                ctx.lineTo(tile - unit, tile - unit)
+                ctx.lineTo(tile / 2, tile - half - unit)
+                ctx.lineTo(unit, tile - unit)
+                ctx.lineTo(unit, unit)
+            }, // double overlapping triangle
+            ctx => {
+                ctx.moveTo(unit, unit)
+                ctx.lineTo(tile - unit, unit)
+                ctx.lineTo(tile - unit, tile / 2)
+                ctx.lineTo(tile / 2, tile - unit)
+                ctx.lineTo(unit, tile / 2)
+                ctx.lineTo(unit, unit)
+            }, // pentagon
+            ctx => {
+                ctx.moveTo(unit, unit)
+                ctx.lineTo(tile / 2, unit + half)
+                ctx.lineTo(tile - unit, unit)
+                ctx.lineTo(tile - unit, half_tile + unit)
+                ctx.lineTo(tile / 2, tile - unit)
+                ctx.lineTo(unit, half_tile + unit)
+                ctx.lineTo(unit, unit)
+            }, // double parallelogram
+            ctx => {
+                ctx.moveTo(half, unit)
+                ctx.lineTo(tile - half, unit)
+                ctx.lineTo(tile - unit, tile / 2)
+                ctx.lineTo(tile - half, tile - unit)
+                ctx.lineTo(half, tile - unit)
+                ctx.lineTo(unit, tile / 2)
+                ctx.lineTo(half, unit)
+            }, // horizontal hexagon
+            ctx => {
+                ctx.moveTo(unit, half)
+                ctx.lineTo(tile / 2, unit)
+                ctx.lineTo(tile - unit, half)
+                ctx.lineTo(tile - unit, tile - half)
+                ctx.lineTo(tile / 2, tile - unit)
+                ctx.lineTo(unit, tile - half)
+                ctx.lineTo(unit, half)
+            }, // vertical hexagon
+            ctx => {
+                ctx.moveTo(half, unit)
+                ctx.lineTo(tile - half, unit)
+                ctx.lineTo(tile - unit, half)
+                ctx.lineTo(tile - unit, tile - half)
+                ctx.lineTo(tile - half, tile - unit)
+                ctx.lineTo(half, tile - unit)
+                ctx.lineTo(unit, tile - half)
+                ctx.lineTo(unit, half)
+                ctx.lineTo(half, unit)
+            }, // octagon
+            ctx => {
+                ctx.moveTo(half, unit)
+                ctx.lineTo(tile - half, unit)
+                ctx.lineTo(tile - unit, tile - unit)
+                ctx.lineTo(unit, tile - unit)
+                ctx.lineTo(half, unit)
+            }, // trapezoid
+            ctx => {
+                ctx.moveTo(unit, unit)
+                ctx.lineTo(tile - unit, unit)
+                ctx.lineTo(tile - half, tile - unit)
+                ctx.lineTo(half, tile - unit)
+                ctx.lineTo(unit, unit)
+            } // upside-down trapezoid
+        ]
+
+        for (const head of heads) {
+            const cvs = document.createElement("canvas")
+            cvs.width = tile
+            cvs.height = tile
+            cvs.style.border = "1px solid red"
+            cvs.style.marginRight = "12px"
+            const ctx = cvs.getContext("2d")
+            ctx.beginPath()
+            head(ctx)
+            ctx.strokeStyle = "#000"
+            ctx.stroke()
+            document.querySelector("body").append(cvs)
+        }
+
+        document.querySelector("body").append(document.createElement("hr"))
+
+        const eyes = [
+            ctx => {
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
+                ctx.fillStyle = "#000"
+                ctx.fill()
+            }, // neutral
+            ctx => {
+                ctx.moveTo(half, half_tile)
+                ctx.lineTo(half + unit, half_tile)
+                ctx.moveTo(tile - half - unit, half_tile)
+                ctx.lineTo(tile - half, half_tile)
+                ctx.strokeStyle = "#000"
+                ctx.stroke()
+            }, // tired
+            ctx => {}, // sad-lonely
+            ctx => {}, // confused
+            ctx => {}, // scared
+            ctx => {}, // panicked
+            ctx => {}, // bothered
+            ctx => {}, // angry
+            ctx => {}, // happy
+            ctx => {}, // amused-content
+        ]
+
+        for (const head of heads) {
+            for (const expression of eyes) {
+                const cvs = document.createElement("canvas")
+                cvs.width = tile
+                cvs.height = tile
+                cvs.style.border = "1px solid green"
+                cvs.style.marginRight = "12px"
+                const ctx = cvs.getContext("2d")
+                ctx.beginPath()
+                head(ctx)
+                ctx.strokeStyle = "#000"
+                ctx.stroke()
+                ctx.closePath()
+
+                ctx.beginPath()
+                expression(ctx)
+                
+                document.querySelector("body").append(cvs)
+            }
+        }
+    </script>
+</body>
+</html>
