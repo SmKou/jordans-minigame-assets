@@ -1,4 +1,5 @@
 import sprite from './assets/anim-sprite.js'
+import max_sprites from './assets/anim-max.js'
 import underground from './assets/trrn-underground.js'
 
 const types = document.getElementById("asset-type-select")
@@ -15,7 +16,7 @@ const erase = () => {
 }
 
 const assets = {
-	anim: { sprite },
+	anim: { sprite, max: max_sprites },
 	trrn: { underground }
 }
 
@@ -83,5 +84,5 @@ content.addEventListener("change", e => {
 types.value = "anim"
 types.dispatchEvent(new Event("change"))
 
-content.value = "sprite"
+content.value = "max"
 content.dispatchEvent(new Event("change"))
