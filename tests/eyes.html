@@ -7,7 +7,7 @@
 </head>
 <body>
     <script>
-        const tile = 64
+        const tile = 32
         const half_tile = tile / 2
         const half = half_tile / 2
         const unit = half / 2
@@ -132,7 +132,9 @@
                 ctx.strokeStyle = "#000"
                 ctx.stroke()
             }, // tired
-            ctx => {}, // sad-lonely
+            ctx => {
+
+            }, // sad-lonely
             ctx => {}, // confused
             ctx => {}, // scared
             ctx => {}, // panicked
@@ -162,6 +164,38 @@
                 document.querySelector("body").append(cvs)
             }
         }
+
+        document.querySelector("body").append(document.createElement("hr"))
+
+        const player = document.createElement("canvas")
+        player.width = tile
+        player.height = tile * 2
+        const pctx = player.getContext("2d")
+        pctx.beginPath()
+        pctx.moveTo(tile / 2 + (half_tile - unit), half_tile)
+        pctx.ellipse(tile / 2, half_tile, half_tile - unit, half_tile - unit, 0, 0, Math.PI * 2)
+        pctx.moveTo(unit, tile)
+        pctx.lineTo(tile - unit, tile)
+        pctx.moveTo(half, tile + unit)
+        pctx.lineTo(half, tile * 2 - half_tile)
+        pctx.moveTo(half + unit, tile + unit)
+        pctx.lineTo(half + unit, tile * 2 - unit)
+        pctx.moveTo(tile - half - unit, tile + unit)
+        pctx.lineTo(tile - half - unit, tile * 2 - unit)
+        pctx.moveTo(tile - half, tile + unit)
+        pctx.lineTo(tile - half, tile * 2 - half_tile)
+        // pctx.moveTo(half + unit / 2, half_tile, )
+
+        pctx.moveTo(half + unit, half_tile)
+        pctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, 0, 2 * Math.PI)
+        pctx.moveTo(tile - half, half_tile)
+        pctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, 0, 2 * Math.PI)
+
+        // ctx.ellipse(half + unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
+        // ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
+        pctx.strokeStyle = "#000"
+        pctx.stroke()
+        document.querySelector("body").append(player)
     </script>
 </body>
 </html>
