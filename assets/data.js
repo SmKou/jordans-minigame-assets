@@ -6,6 +6,15 @@ const unit = half / 2
 
 export const units = { block, tile, half_tile, half, unit }
 
+export const sizes = {
+    block: 32,
+    tile: 16,
+    half_tile: 8,
+    half: 4,
+    unit: 2,
+    point: 1
+}
+
 export const rad = (deg) => deg * Math.PI / 180
 
 export const create_grid_container = (props) => {

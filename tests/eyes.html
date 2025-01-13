@@ -7,7 +7,9 @@
 </head>
 <body>
     <script>
-        const tile = 32
+        // block = 32 x 32
+        // player = block x 2*block
+        const tile = 64
         const half_tile = tile / 2
         const half = half_tile / 2
         const unit = half / 2
@@ -117,31 +119,81 @@
 
         document.querySelector("body").append(document.createElement("hr"))
 
+        // pctx.moveTo(half + unit, half_tile)
+        
         const eyes = [
             ctx => {
-                ctx.ellipse(half + unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
-                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
-                ctx.fillStyle = "#000"
-                ctx.fill()
+                ctx.moveTo(half + unit, half_tile)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, 0, 2 * Math.PI)
+                ctx.moveTo(tile - half, half_tile)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, 0, 2 * Math.PI)
             }, // neutral
             ctx => {
                 ctx.moveTo(half, half_tile)
                 ctx.lineTo(half + unit, half_tile)
                 ctx.moveTo(tile - half - unit, half_tile)
                 ctx.lineTo(tile - half, half_tile)
-                ctx.strokeStyle = "#000"
-                ctx.stroke()
             }, // tired
             ctx => {
-
+                ctx.moveTo(half, half_tile)
+                ctx.lineTo(half + unit, half_tile - unit)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 4, Math.PI)
+                ctx.moveTo(tile - half - unit, half_tile - unit)
+                ctx.lineTo(tile - half, half_tile)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, 0, 5 * Math.PI / 4)
             }, // sad-lonely
-            ctx => {}, // confused
-            ctx => {}, // scared
-            ctx => {}, // panicked
-            ctx => {}, // bothered
-            ctx => {}, // angry
-            ctx => {}, // happy
-            ctx => {}, // amused-content
+            ctx => {
+                ctx.moveTo(half, half_tile + unit)
+                ctx.lineTo(half + unit, half_tile + unit / 2)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, 0, 3 * Math.PI / 4, true)
+                ctx.moveTo(tile - half - unit, half_tile + unit / 2)
+                ctx.lineTo(tile - half, half_tile + unit)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, Math.PI / 4, 3 * Math.PI / 4, true)
+            }, // confused
+            ctx => {
+                ctx.moveTo(half + unit, half_tile)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit / 2, 0, 0, 2 * Math.PI)
+                ctx.moveTo(tile - half, half_tile)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit / 2, 0, 0, 2 * Math.PI)
+            }, // scared
+            ctx => {
+                ctx.moveTo(half_tile - unit / 2, half_tile)
+                ctx.ellipse(half + unit / 2, half_tile, unit, half, 0, 0, 2 * Math.PI)
+                ctx.moveTo(tile - half + unit / 2, half_tile)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit, half, 0, 0, 2 * Math.PI)
+            }, // panicked
+            ctx => {
+                ctx.moveTo(half - unit / 4, half_tile - unit / 2)
+                ctx.lineTo(half + unit, half_tile - unit / 2)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 12, 13 * Math.PI / 12)
+                ctx.moveTo(tile - half - unit, tile - half_tile - unit / 2)
+                ctx.lineTo(tile - half, half_tile - unit / 2)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 12, 13 * Math.PI / 12)
+            }, // bothered
+            ctx => {
+                ctx.moveTo(half, half_tile - unit)
+                ctx.lineTo(half + unit, half_tile)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, 0, Math.PI + Math.PI / 4)
+                ctx.moveTo(tile - half, half_tile - unit)
+                ctx.lineTo(tile - half - unit, half_tile)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 4, Math.PI)
+            }, // angry
+            ctx => {
+                ctx.moveTo(half, half_tile + unit / 2)
+                ctx.lineTo(half + unit, half_tile + unit)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 4, 3 * Math.PI / 4, true)
+                ctx.moveTo(tile - half - unit, half_tile + unit)
+                ctx.lineTo(tile - half, half_tile + unit / 2)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 4, 3 * Math.PI / 4, true)
+            }, // happy
+            ctx => {
+                ctx.moveTo(half, half_tile + unit / 2)
+                ctx.lineTo(half + unit, half_tile + unit / 2)
+                ctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 12, 11 * Math.PI / 12, true)
+                ctx.moveTo(tile - half - unit, half_tile + unit / 2)
+                ctx.lineTo(tile - half, half_tile + unit / 2)
+                ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, -Math.PI / 12, 11 * Math.PI / 12, true)
+            }, // amused-content
         ]
 
         for (const head of heads) {
@@ -157,12 +209,13 @@
                 ctx.strokeStyle = "#000"
                 ctx.stroke()
                 ctx.closePath()
-
                 ctx.beginPath()
                 expression(ctx)
-                
+                ctx.fillStyle = "#000"
+                ctx.fill()
                 document.querySelector("body").append(cvs)
             }
+            document.querySelector("body").append(document.createElement("br"))
         }
 
         document.querySelector("body").append(document.createElement("hr"))
@@ -172,10 +225,14 @@
         player.height = tile * 2
         const pctx = player.getContext("2d")
         pctx.beginPath()
+
+        // head
         pctx.moveTo(tile / 2 + (half_tile - unit), half_tile)
         pctx.ellipse(tile / 2, half_tile, half_tile - unit, half_tile - unit, 0, 0, Math.PI * 2)
         pctx.moveTo(unit, tile)
         pctx.lineTo(tile - unit, tile)
+
+        // body
         pctx.moveTo(half, tile + unit)
         pctx.lineTo(half, tile * 2 - half_tile)
         pctx.moveTo(half + unit, tile + unit)
@@ -184,15 +241,13 @@
         pctx.lineTo(tile - half - unit, tile * 2 - unit)
         pctx.moveTo(tile - half, tile + unit)
         pctx.lineTo(tile - half, tile * 2 - half_tile)
-        // pctx.moveTo(half + unit / 2, half_tile, )
 
+        // eyes
         pctx.moveTo(half + unit, half_tile)
         pctx.ellipse(half + unit / 2, half_tile, unit / 2, unit, 0, 0, 2 * Math.PI)
         pctx.moveTo(tile - half, half_tile)
         pctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, unit, 0, 0, 2 * Math.PI)
 
-        // ctx.ellipse(half + unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
-        // ctx.ellipse(tile - half - unit / 2, half_tile, unit / 2, half, 0, 0, Math.PI * 2)
         pctx.strokeStyle = "#000"
         pctx.stroke()
         document.querySelector("body").append(player)
