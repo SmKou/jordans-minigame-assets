@@ -209,10 +209,13 @@
                 ctx.strokeStyle = "#000"
                 ctx.stroke()
                 ctx.closePath()
+
                 ctx.beginPath()
                 expression(ctx)
-                ctx.fillStyle = "#000"
-                ctx.fill()
+                ctx.strokeStyle = "#000"
+                ctx.stroke()
+                // ctx.fillStyle = "#000"
+                // ctx.fill()
                 document.querySelector("body").append(cvs)
             }
             document.querySelector("body").append(document.createElement("br"))
@@ -251,6 +254,34 @@
         pctx.strokeStyle = "#000"
         pctx.stroke()
         document.querySelector("body").append(player)
+
+        document.querySelector("body").append(document.createElement("hr"))
+
+        const expressions = [
+            ctx => {}
+        ]
+
+        for (const exp of expressions) {
+            const dbl_tri = document.createElement("canvas")
+            dbl_tri.width = tile
+            dbl_tri.height = tile
+            const dtx = dbl_tri.getContext("2d")
+            heads[3](dtx)
+            exp(dtx)
+            dtx.strokeStyle = "#000"
+            dtx.stroke()
+            document.querySelector("body").append(dbl_tri)
+
+            const penta = document.createElement("canvas")
+            penta.width = tile
+            penta.height = tile
+            const ptx = penta.getContext("2d")
+            heads[5](ptx)
+            exp(ptx)
+            ptx.strokeStyle = "#000"
+            ptx.stroke()
+            document.querySelector("body").append(penta)
+        }
     </script>
 </body>
 </html>

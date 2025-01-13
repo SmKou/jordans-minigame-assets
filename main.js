@@ -1,6 +1,5 @@
 import sprite from './assets/anim-sprite.js'
 import max_sprites from './assets/anim-max.js'
-import underground from './assets/trrn-underground.js'
 
 const types = document.getElementById("asset-type-select")
 const content = document.getElementById("asset-select")
@@ -16,8 +15,7 @@ const erase = () => {
 }
 
 const assets = {
-	anim: { sprite, max: max_sprites },
-	trrn: { underground }
+	anim: { sprite, max: max_sprites }
 }
 
 const clear = (e) => {
