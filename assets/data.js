@@ -1,11 +1,3 @@
-const block = 64
-const tile = block / 2
-const half_tile = tile / 2
-const half = half_tile / 2
-const unit = half / 2
-
-export const units = { block, tile, half_tile, half, unit }
-
 export const sizes = {
     block: 32,
     tile: 16,
