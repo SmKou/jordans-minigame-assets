@@ -9,7 +9,7 @@
     <script>
         // block = 32 x 32
         // player = block x 2*block
-        const tile = 64
+        const tile = 32
         const half_tile = tile / 2
         const half = half_tile / 2
         const unit = half / 2
@@ -255,10 +255,90 @@
         pctx.stroke()
         document.querySelector("body").append(player)
 
+        const block = tile
+        const tile2 = half_tile
+        const half_tile2 = half
+        const half2 = unit
+        const unit2 = half2 / 2
+        const point = unit2 / 2
+
+        const player2 = document.createElement("canvas")
+        player2.width = player2.height = block
+        const p2x = player2.getContext("2d")
+        p2x.beginPath()
+        p2x.moveTo(tile2 + half_tile2, half_tile2)
+        p2x.ellipse(tile2, half_tile2, half_tile2, half_tile2, 0, 0, 2 * Math.PI)
+        p2x.moveTo(half_tile2, tile2 + unit2)
+        p2x.lineTo(block - half_tile2, tile2 + unit2)
+        p2x.moveTo()
+        
+        // p2x.moveTo(sizes.half_tile, sizes.tile + sizes.unit)
+        // p2x.lineTo(sizes.block - sizes.half_tile, sizes.tile + sizes.unit)
+        // p2x.moveTo(sizes.half_tile, sizes.tile + sizes.half)
+        // p2x.lineTo(sizes.half_tile, sizes.tile + sizes.half_tile)
+        // p2x.moveTo(sizes.half_tile + sizes.half, sizes.tile + sizes.half)
+        // p2x.lineTo(sizes.half_tile + sizes.half, sizes.block - sizes.unit)
+        // p2x.moveTo(sizes.block - sizes.half_tile - sizes.half, sizes.tile + sizes.half)
+        // p2x.lineTo(sizes.block - sizes.)
+
+        p2x.strokeStyle = "#000"
+        p2x.stroke()
+        document.querySelector("body").append(player2)
+
         document.querySelector("body").append(document.createElement("hr"))
 
+        const test_heads = {
+            dbl_triangle: ctx => {
+                ctx.moveTo(half, unit)
+                ctx.lineTo(tile / 2, half + unit)
+                ctx.lineTo(tile - half, unit)
+                ctx.lineTo(tile - unit, tile - unit)
+                ctx.lineTo(tile / 2, tile - half - unit)
+                ctx.lineTo(unit, tile - unit)
+                ctx.lineTo(half, unit)
+            },
+            pentagon: ctx => {
+                ctx.moveTo(unit, unit)
+                ctx.lineTo(tile - unit, unit)
+                ctx.lineTo(tile - unit, tile / 2)
+                ctx.lineTo(tile / 2, tile - unit)
+                ctx.lineTo(unit, tile / 2)
+                ctx.lineTo(unit, unit)
+            }
+        }
+
         const expressions = [
-            ctx => {}
+            (ctx, offset = 0) => {
+            }, // neutral
+            (ctx, offset = 0) => {
+                ctx.moveTo(half + 5 * unit / 4, offset + tile / 2)
+                ctx.ellipse(half + 3 * unit / 4, offset + tile / 2, unit / 2, unit / 2, 0, 0, Math.PI, true)
+                ctx.moveTo(half + 5 * unit / 4, offset + tile / 2)
+                ctx.ellipse(half + 3 * unit / 4, offset + tile / 2, unit / 2, unit / 2, 0, 0, Math.PI)
+
+                ctx.moveTo(tile - half - unit / 4, offset + tile / 2)
+                ctx.ellipse(tile - half - 3 * unit / 4, offset + tile / 2, unit / 2, unit / 2, 0, 0, Math.PI, true)
+                ctx.moveTo(tile - half - unit / 4, offset + tile / 2)
+                ctx.ellipse(tile - half - 3 * unit / 4, offset + tile / 2, unit / 2, unit / 2, 0, 0, Math.PI)
+            }, // scared
+            (ctx, offset = 0) => {
+                ctx.moveTo(half + unit + unit / 2, offset + tile / 2)
+                ctx.ellipse(half + unit / 2, offset + tile / 2, unit, half, 0, 0, Math.PI, true)
+                ctx.moveTo(half + unit + unit / 2, offset + tile / 2)
+                ctx.ellipse(half + unit / 2, offset + tile / 2, unit, unit, 0, 0, Math.PI)
+
+                ctx.moveTo(tile - half + unit / 2, offset + tile / 2)
+                ctx.ellipse(tile - half - unit / 2, offset + tile / 2, unit, half, 0, 0, Math.PI, true)
+                ctx.moveTo(tile - half + unit / 2, offset + tile / 2)
+                ctx.ellipse(tile - half - unit / 2, offset + tile / 2, unit, unit, 0, 0, Math.PI)
+            }, // panicked
+            (ctx, offset = 0) => {}, // amused-content
+            (ctx, offset = 0) => {}, // bothered
+            (ctx, offset = 0) => {}, // confused
+            (ctx, offset = 0) => {}, // sad-lonely
+            (ctx, offset = 0) => {}, // happy
+            (ctx, offset = 0) => {}, // angry
+            (ctx, offset = 0) => {}, // tired
         ]
 
         for (const exp of expressions) {
@@ -266,7 +346,8 @@
             dbl_tri.width = tile
             dbl_tri.height = tile
             const dtx = dbl_tri.getContext("2d")
-            heads[3](dtx)
+            dtx.beginPath()
+            test_heads.dbl_triangle(dtx)
             exp(dtx)
             dtx.strokeStyle = "#000"
             dtx.stroke()
@@ -276,8 +357,9 @@
             penta.width = tile
             penta.height = tile
             const ptx = penta.getContext("2d")
-            heads[5](ptx)
-            exp(ptx)
+            ptx.beginPath()
+            test_heads.pentagon(ptx)
+            exp(ptx, -unit / 2)
             ptx.strokeStyle = "#000"
             ptx.stroke()
             document.querySelector("body").append(penta)
