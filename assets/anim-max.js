@@ -1,7 +1,12 @@
-import { units, rad, create_grid_container, create_container, create_canvas } from './data.js'
+import { rad, create_grid_container, create_container, create_canvas } from './data.js'
 
 const n = 120
-const { block, tile, half_tile, half } = units
+
+const block = 64
+const tile = 32
+const half_tile = 16
+const half = 8
+
 const dim = block * 2
 const deg = [0, 22.5, 45, 67.5]
 const trans = [
