@@ -50,3 +50,16 @@ export const create_canvas = (qty, props, init) => function() {
 		canvas.push(create(i))
 	return canvas
 }
+
+export const eyes = {
+    neutral: (ctx, xoff = 0, yoff = 0) => {},
+    scared: (ctx, xoff = 0, yoff = 0) => {},
+    panicked: (ctx, xoff = 0, yoff = 0) => {},
+    ease: (ctx, xoff = 0, yoff = 0) => {}, // amused-content
+    bothered: (ctx, xoff = 0, yoff = 0) => {},
+    confused: (ctx, xoff = 0, yoff = 0) => {},
+    down: (ctx, xoff = 0, yoff = 0) => {}, // sad-lonely
+    happy: (ctx, xoff = 0, yoff = 0) => {},
+    angry: (ctx, xoff = 0, yoff = 0) => {},
+    tired: (ctx, xoff = 0, yoff = 0) => {}
+}
