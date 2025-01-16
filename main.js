@@ -1,5 +1,6 @@
 import sprite from './assets/anim-sprite.js'
 import max_sprites from './assets/anim-max.js'
+import player from './assets/figs-player.js'
 
 const types = document.getElementById("asset-type-select")
 const content = document.getElementById("asset-select")
@@ -15,7 +16,8 @@ const erase = () => {
 }
 
 const assets = {
-	anim: { sprite, max: max_sprites }
+	anim: { sprite, max: max_sprites },
+    figs: { player }
 }
 
 const clear = (e) => {
@@ -73,7 +75,15 @@ content.addEventListener("change", e => {
 		case 'trrn':
 			console.log(select_asset)
 			break;
-
+        case 'figs':
+            if (ui.content === "player") {
+                const fns = select_asset(main)
+            }
+            break;
+        case 'geos':
+            break;
+        case 'info':
+            break;
 	}
 })
 
