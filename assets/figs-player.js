@@ -1,49 +1,70 @@
-import { units, create_grid_container } from "./data"
+import { create_grid_container, create_container, sizes } from "./data"
 
-const { block, tile, half_tile, half, unit } = units
+const { block, tile, half_tile, half, unit, point } = sizes
 
-const head = ctx => {
-    ctx.strokeStyle = "#000"
-    ctx.moveTo(half_tile + unit, unit)
-    ctx.ellipse(tile, half_tile, half_tile + half, half_tile + half, 0, 0, Math.PI * 2)
-    ctx.stroke()
-}
+const player_frames = {
+    move: {
+        up: [
+            ctx => {
+                ctx.beginPath()
+                ctx.moveTo(tile + half_tile - point, half_tile)
+                ctx.ellipse(tile, half_tile, half_tile - point, half_tile - point, 0, 0, 2 * Math.PI)
+                ctx.moveTo(half_tile - point, tile - point)
+                ctx.rect(half_tile - point, tile - point, tile + unit, unit + point)
+                ctx.fillStyle = "#fff"
+                ctx.fill()
+                
+                ctx.beginPath()
+                ctx.moveTo(tile + half_tile - unit, half_tile)
+                ctx.ellipse(tile, half_tile, half_tile - unit, half_tile - unit, 0, 0, 2 * Math.PI)
+                ctx.moveTo(half_tile, tile)
+                ctx.lineTo(3 * half_tile / 4, tile)
+                ctx.strokeStyle = "#000"
+                ctx.stroke()
 
-// -1: face left, 1: face right
-// const eyes = (ctx, expression, side) => {
-//     const offset = side === -1 ? 
-//     ctx.moveTo()
-// }
 
-const frames = (dir, idx) => {
-    const cvs = new OffscreenCanvas(block, block)
-    const ctx = cvs.getContext("2d")
-    ctx.beginPath()
-    head(ctx)
-
-}
-
-const generate = (main) => {
-    const grid = create_grid_container()
-    const methods = []
-    
-}
-export default generate
-/*
-const generate = (main) => {
-    const grid = create_grid_container()
-    const methods = [contained_canvas_position, canvas_redraw, cycle_frame_layer, sample]
-    const run_proc = []
-    for (const {container, canvas, draw} of methods) {
-        const ctnr_elm = container()
-        const cvs_elms = canvas()
-        ctnr_elm.append(...cvs_elms)
-        grid.append(ctnr_elm)
-        run_proc.push(draw(cvs_elms))
+            },
+            ctx => {}
+        ],
+        down: [],
+        side: []
+    },
+    idle: {
+        up: ctx => {},
+        down: ctx => {},
+        side: (ctx, face_left = false) => {} 
     }
-    main.append(grid)
-    return run_proc
+}
+
+const move_player = () => {}
+
+const stop_player = () => {}
+
+const generate = main => {
+    for (const dir of Object.keys(player_frames.move)) {
+        const container = create_grid_container()
+        const frames = player_frames.move[dir]
+        container.title = "Player move: " + dir
+        for (const frame of frames) {
+            const cvs = create_canvas(1, { width: block, height: block }, cvs => frame(cvs.getContext("2d")))()
+            container.append(cvs)
+        }
+        main.append(container)
+    }
+
+    const idle_container = create_grid_container()
+    idle_container.title = "Player idle views"
+    for (const frame of Object.keys(player_frames.idle)) {
+        const cvs = create_canvas(1, {  width: block, height: block }, cvs => frame(cvs.getContext("2d")))()
+        idle_container.append(cvs)
+    }
+    main.append(idle_container)
+
+    main.append(document.creaateElement("hr"))
+
+    const player = create_container("Interactive player", { width: block, height: block, position: "relative" })
+    main.append(player)
+    return { move_player, stop_player }
 }
 
 export default generate
-*/
