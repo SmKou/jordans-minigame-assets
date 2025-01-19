@@ -34,12 +34,17 @@ Note: Asset requirements
 
 1.  []  Player
     []  Fig: mother
-    []  House[player]: bedroom, living room
-    []  Collision: immovable, transition
+    []  House[player]: interior - bedroom
+    []  House[player]: interior - living room
+    []  Collision: immovable
+    []  Collision: transition
 
     Move [character]
 
-2.  []  UI: clock, health, stamina, countdown
+2.  []  UI: clock
+    []  UI: health
+    []  UI: stamina
+    []  UI: countdown
     []  Contacts
     []  Inventory
     []  Transition: gravitational anomaly
@@ -48,13 +53,25 @@ Note: Asset requirements
     Navigate [menu]
 
     2b. Communication
-        []  Use of eyes
+        []  Eyes
         []  Object references
+        []  Actions
+            []  open [object]
+            []  view [info]
+            []  activate [object]
+            []  navigate [map|menu]
+            []  goto/move
+            []  use [object]
+            []  ask
+            []  answer
+        []  Entities
+            []  player
+            []  mother
         []  Schedule
-        
-        Craft [object]
-        Ask [character]
-        Answer [character]
+            []  time
+            []  task
+            []  goal (params)
+            []
 
 3.  []  Fig: friend (Jack Skellington Jr.)
     []  Fig: rival (Genie du Lamp)
@@ -69,8 +86,10 @@ Note: Asset requirements
         []  Path
         []  Lights
 
-    3b. []  House[friend]: exterior, living area
-        []  House[rival]: exterior, living area
+    3b. []  House[friend]: exterior
+        []  House[friend]: interior - living area
+        []  House[rival]: exterior
+        []  House[rival]: interior - living area
     3c. []  Battle
 
 4.  []  Figs: clinic staff
