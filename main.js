@@ -77,7 +77,7 @@ content.addEventListener("change", e => {
 			break;
         case 'figs':
             if (ui.content === "player") {
-                const fns = select_asset(main)
+                select_asset(main)
             }
             break;
         case 'geos':
@@ -89,8 +89,8 @@ content.addEventListener("change", e => {
 
 // Quick select: used for graphic debugging
 
-types.value = "anim"
+types.value = "figs"
 types.dispatchEvent(new Event("change"))
 
-content.value = "max"
+content.value = "player"
 content.dispatchEvent(new Event("change"))

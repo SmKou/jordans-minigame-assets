@@ -1,70 +1,82 @@
-import { create_grid_container, create_container, sizes } from "./data"
+import { create_grid_container, create_container, create_canvas, sizes } from "./data"
 
 const { block, tile, half_tile, half, unit, point } = sizes
 
-const player_frames = {
-    move: {
-        up: [
-            ctx => {
-                ctx.beginPath()
-                ctx.moveTo(tile + half_tile - point, half_tile)
-                ctx.ellipse(tile, half_tile, half_tile - point, half_tile - point, 0, 0, 2 * Math.PI)
-                ctx.moveTo(half_tile - point, tile - point)
-                ctx.rect(half_tile - point, tile - point, tile + unit, unit + point)
-                ctx.fillStyle = "#fff"
-                ctx.fill()
-                
-                ctx.beginPath()
-                ctx.moveTo(tile + half_tile - unit, half_tile)
-                ctx.ellipse(tile, half_tile, half_tile - unit, half_tile - unit, 0, 0, 2 * Math.PI)
-                ctx.moveTo(half_tile, tile)
-                ctx.lineTo(3 * half_tile / 4, tile)
-                ctx.strokeStyle = "#000"
-                ctx.stroke()
+const fill = ctx => {
+    ctx.fillStyle = "#fff"
+    ctx.fill()
+}
 
+const stroke = ctx => {
+    ctx.strokeStyle = "#000"
+    ctx.stroke()
+}
 
-            },
-            ctx => {}
-        ],
-        down: [],
-        side: []
-    },
-    idle: {
-        up: ctx => {},
-        down: ctx => {},
-        side: (ctx, face_left = false) => {} 
+const idle_y = is_up => {
+    const cvs = new OffscreenCanvas(tile + half_tile, block + tile)
+    const ctx = cvs.getContext("2d")
+    // head
+    // shoulders
+    // left arm/leg
+    // right arm/leg
+
+    return cvs
+}
+
+const move_y = is_up => {}
+
+const idle_x = is_left => {
+    const cvs = new OffscreenCanvas(tile + half_tile, block + tile)
+    const ctx = cvs.getContext("2d")
+}
+
+const move_x = is_left => {}
+
+const move_player = () => {
+    w: () => {
+
     }
 }
 
-const move_player = () => {}
-
-const stop_player = () => {}
+const stop_player = () => {
+    keyup
+}
 
 const generate = main => {
-    for (const dir of Object.keys(player_frames.move)) {
-        const container = create_grid_container()
-        const frames = player_frames.move[dir]
-        container.title = "Player move: " + dir
-        for (const frame of frames) {
-            const cvs = create_canvas(1, { width: block, height: block }, cvs => frame(cvs.getContext("2d")))()
-            container.append(cvs)
-        }
-        main.append(container)
+    const grid = create_grid_container()
+
+    const size_sample = document.createElement("canvas")
+    size_sample.width = block
+    size_sample.height = block
+    size_sample.style.marginRight = half_tile + "px"
+    const s = Object.keys(sizes)
+    const ss_ctx = size_sample.getContext("2d")
+    ss_ctx.fillStyle = "#000"
+    ss_ctx.fillRect(0, 0, block, block)
+    ss_ctx.beginPath()
+    for (let i = 0; i < s.length; ++i) {
+        ss_ctx.moveTo(0, half + i * half)
+        ss_ctx.lineTo(sizes[s[i]], half + i * half)
     }
+    ss_ctx.strokeStyle = "#fff"
+    ss_ctx.stroke()
+    grid.append(size_sample)
 
-    const idle_container = create_grid_container()
-    idle_container.title = "Player idle views"
-    for (const frame of Object.keys(player_frames.idle)) {
-        const cvs = create_canvas(1, {  width: block, height: block }, cvs => frame(cvs.getContext("2d")))()
-        idle_container.append(cvs)
+    const get_frame = (fn, ipt = false) => {
+        const cvs = document.createElement("canvas")
+        cvs.width = block
+        cvs.height = block
+        cvs.style.marginRight = half_tile + "px"
+        const ctx = cvs.getContext("2d")
+        ctx.fillStyle = "#000"
+        ctx.fillRect(0, 0, block, block)
+        ctx.drawImage(fn(ipt), half_tile, 0)
+        return cvs
     }
-    main.append(idle_container)
+    grid.append(get_frame(idle_y, true))
+    grid.append(get_frame(idle_y))
 
-    main.append(document.creaateElement("hr"))
-
-    const player = create_container("Interactive player", { width: block, height: block, position: "relative" })
-    main.append(player)
-    return { move_player, stop_player }
+    main.append(grid)
 }
 
 export default generate
