@@ -55,6 +55,10 @@ Note: Asset requirements
     2b. Communication
         []  Eyes
         []  Object references
+            []  charge
+            []  charging device(s)
+            []  charging station(s)
+            []
         []  Actions
             []  open [object]
             []  view [info]
@@ -71,7 +75,9 @@ Note: Asset requirements
             []  time
             []  task
             []  goal (params)
-            []
+            []  priority
+            []  interest
+        **Note**: Extent of communication system should be developed in segments. Only develop as far as needed for present scope of area, characters, and objects.
 
 3.  []  Fig: friend (Jack Skellington Jr.)
     []  Fig: rival (Genie du Lamp)
