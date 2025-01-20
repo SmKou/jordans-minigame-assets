@@ -9,57 +9,92 @@ export const sizes = {
 
 export const rad = (deg) => deg * Math.PI / 180
 
-export const create_grid_container = (props) => {
-	const container = document.createElement("section")
-	container.style.width = "100%"
-	container.style.marginBottom = `${sizes.tile}px`
-	container.style.display = "flex"
-	container.style.flexWrap = "wrap"
-	container.style.alignItems = "center"
+export const create_section = (props, is_grid) => {
+    const section = document.createElement("section")
+    section.style.width = "100%"
+    section.style.marginBottom = sizes.tile + "px"
+    if (is_grid) {
+        section.style.display = "flex"
+        section.style.flexWrap = "wrap"
+        section.style.alignItems = "center"
+    }
     if (props)
         for (const prop of Object.keys(props))
-            container.style[prop] = props[prop]
-	return container
+            section.style[prop] = props[prop]
+    return section
 }
 
-export const create_container = (caption, props) => function() {
-	const { width, height, ...css_props } = props
-	const container = document.createElement("div")
-	container.title = caption
-	container.style.position = "relative"
-	container.style.width = width ? width + 'px' : sizes.block + 'px'
-	container.style.height = height ? height + 'px' : sizes.block + 'px'
-	for (const prop of Object.keys(props))
-		container.style[prop] = props[prop]
-	return container
+export const create_container = (caption, props) => {
+    const { width, height, ...cssprops } = props
+    const container = document.createElement("div")
+    container.title = caption
+    container.style.position = "relative"
+    container.style.width = width + "px"
+    container.style.height = height + "px"
+    for (const prop of Object.keys(cssprops))
+        container.style[prop] = cssprops[prop]
+    return container
 }
 
-export const create_canvas = (qty, props, init) => function() {
-	const { width, height, ...css_props } = props
-	const canvas = []
-	const create = idx => {
-		const cvs = document.createElement("canvas")
-		cvs.width = width ? width : sizes.block
-		cvs.height = height ? height : sizes.block
-		for (const prop of Object.keys(css_props))
-			cvs.style[prop] = css_props[prop]
-		init(cvs, idx)
-		return cvs
-	}
-	for (let i = 0; i < qty; ++i)
-		canvas.push(create(i))
-	return canvas
+export const create_frame = (props, draw) => {
+    const { width, height, ...cssprops } = props
+    const cvs = document.createElement("canvas")
+    cvs.width = width
+    cvs.height = height
+    if (Object.keys(cssprops).length)
+        for (const prop of Object.keys(cssprops))
+            cvs.style[prop] = cssprops[prop]
+    draw(cvs.getContext("2d"))
+    return cvs
 }
 
-export const eyes = {
-    neutral: (ctx, xoff = 0, yoff = 0) => {},
-    scared: (ctx, xoff = 0, yoff = 0) => {},
-    panicked: (ctx, xoff = 0, yoff = 0) => {},
-    ease: (ctx, xoff = 0, yoff = 0) => {}, // amused-content
-    bothered: (ctx, xoff = 0, yoff = 0) => {},
-    confused: (ctx, xoff = 0, yoff = 0) => {},
-    down: (ctx, xoff = 0, yoff = 0) => {}, // sad-lonely
-    happy: (ctx, xoff = 0, yoff = 0) => {},
-    angry: (ctx, xoff = 0, yoff = 0) => {},
-    tired: (ctx, xoff = 0, yoff = 0) => {}
+export const create_frames = (props, draw) => {
+    const { width, height, ...cssprops } = props
+    const arr = []
+    for (let i = 0; i < draw.length; ++i) {
+        const cvs = document.createElement("canvas")
+        cvs.width = width
+        cvs.height = height
+        if (Object.keys(cssprops).length)
+            for (const prop of Object.keys(cssprops))
+                cvs.style[prop] = cssprops[prop]
+        draw[i](cvs.getContext("2d"), i)
+        arr.push(cvs)
+    }
+    return arr
+}
+
+/*
+A spritesheet is a graphic split into even rows and columns. Each row is a series of frames (columns) to depict an animation.
+@param props: {
+    width: sprite width,
+    height: sprite height,
+    xoff: x-offset of sprite img,
+    yoff: y-offset for each sprite
+}
+@params frames: {
+    [state]: [ fn frame_1(), fn frame_2()..., fn frame_n() ]
+}
+
+Note: fn frame_n() returns offscreen canvas
+*/
+export const create_spritesheet = (props, frames) => {
+    const { width, height, xoff, yoff, xmax } = props
+    const states = Object.keys(frames)
+
+    const cvs = document.createElement("canvas")
+    cvs.width = (width + 2 * xoff) * xmax
+    cvs.height = (height + 2 * yoff) * states.length
+
+    const ctx = cvs.getContext("2d")
+    for (let y = 0; y < states.length; ++y) {
+        const cols = frames[states[y]]
+        for (let x = 0; x < cols.length; ++x)
+            ctx.drawImage(
+                cols[x],
+                (width + 2 * xoff) * x + xoff,
+                (height + 2 * yoff) * y + yoff
+            )
+    }
+    return cvs
 }
