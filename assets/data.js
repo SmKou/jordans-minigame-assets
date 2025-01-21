@@ -45,7 +45,7 @@ export const create_frame = (props, draw) => {
         for (const prop of Object.keys(cssprops))
             cvs.style[prop] = cssprops[prop]
     draw(cvs.getContext("2d"))
-    return cvs
+    return [cvs]
 }
 
 export const create_frames = (props, draw) => {
@@ -96,5 +96,46 @@ export const create_spritesheet = (props, frames) => {
                 (height + 2 * yoff) * y + yoff
             )
     }
-    return cvs
+    return [cvs]
 }
+
+export const create_draw = (arr, fps = 60, run_proc, input) => {
+    let ui = {
+        fps_interval: 1000 / fps,
+        frame: 0,
+        then: Date.now(),
+        elapsed: 0
+    }
+
+    const params = {}
+    if (input.includes('arr'))
+        params.arr = arr
+    if (input.includes('cvs'))
+        params.cvs = arr[0]
+    if (input.includes('ctx'))
+        params.ctx = cvs.getContext("2d")
+
+    const draw = function() {
+        requestAnimationFrame(draw)
+        ui.now = Date.now()
+        ui.elapsed = ui.now - ui.then
+        if (ui.elapsed > ui.fps_interval) {
+            ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+            ui = run_proc({ ...params, ui })
+        }
+    }
+    return draw
+}
+
+// export const eyes = {
+//     neutral: (ctx, xoff = 0, yoff = 0) => {},
+//     scared: (ctx, xoff = 0, yoff = 0) => {},
+//     panicked: (ctx, xoff = 0, yoff = 0) => {},
+//     ease: (ctx, xoff = 0, yoff = 0) => {}, // amused-content
+//     bothered: (ctx, xoff = 0, yoff = 0) => {},
+//     confused: (ctx, xoff = 0, yoff = 0) => {},
+//     down: (ctx, xoff = 0, yoff = 0) => {}, // sad-lonely
+//     happy: (ctx, xoff = 0, yoff = 0) => {},
+//     angry: (ctx, xoff = 0, yoff = 0) => {},
+//     tired: (ctx, xoff = 0, yoff = 0) => {}
+// }
