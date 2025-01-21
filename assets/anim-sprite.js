@@ -39,7 +39,7 @@ const create_canvas = (qty, props, init) => {
         for (const prop of Object.keys(cssprops))
             cvs.style[prop] = cssprops[prop]
         const ctx = cvs.getContext("2d")
-        init(ctx)
+        init(ctx, i)
         arr.push(cvs)
     }
     return arr

@@ -313,6 +313,8 @@
             return run_proc
         }
 
+        generate(document.getElementById("app"))
+
         /* Issues with requestAnimationFrame:
             Unknown frame rate
             Because the callback is synced to the display refresh rate the frame rate will vary from device to device. You should use the time argument to determine the rate and adjust your animation as needed.
