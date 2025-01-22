@@ -99,7 +99,7 @@ export const create_spritesheet = (props, frames) => {
     return [cvs]
 }
 
-export const create_draw = (arr, fps = 60, run_proc, input) => {
+export const create_draw = (arr, run_proc, input, fps = 60) => {
     let ui = {
         fps_interval: 1000 / fps,
         frame: 0,
@@ -107,13 +107,13 @@ export const create_draw = (arr, fps = 60, run_proc, input) => {
         elapsed: 0
     }
 
-    const params = {}
+    let ipt;
     if (input.includes('arr'))
-        params.arr = arr
+        ipt = arr
     if (input.includes('cvs'))
-        params.cvs = arr[0]
+        ipt = arr[0]
     if (input.includes('ctx'))
-        params.ctx = cvs.getContext("2d")
+        ipt = cvs.getContext("2d")
 
     const draw = function() {
         requestAnimationFrame(draw)
@@ -121,7 +121,7 @@ export const create_draw = (arr, fps = 60, run_proc, input) => {
         ui.elapsed = ui.now - ui.then
         if (ui.elapsed > ui.fps_interval) {
             ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-            ui = run_proc({ ...params, ui })
+            ui = run_proc({ ipt, ui })
         }
     }
     return draw

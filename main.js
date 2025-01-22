@@ -1,6 +1,6 @@
 import sprite from './assets/anim-sprite.js'
 import max_sprites from './assets/anim-max.js'
-import player from './assets/figs-player.js'
+import avatar from './assets/anim-avatar.js'
 
 const types = document.getElementById("asset-type-select")
 const content = document.getElementById("asset-select")
@@ -16,8 +16,7 @@ const erase = () => {
 }
 
 const assets = {
-	anim: { sprite, max: max_sprites },
-    figs: { player }
+	anim: { sprite, max: max_sprites, avatar }
 }
 
 const clear = (e) => {
@@ -89,8 +88,8 @@ content.addEventListener("change", e => {
 
 // Quick select: used for graphic debugging
 
-types.value = "figs"
+types.value = "anim"
 types.dispatchEvent(new Event("change"))
 
-content.value = "player"
+content.value = "avatar"
 content.dispatchEvent(new Event("change"))

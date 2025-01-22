@@ -102,6 +102,8 @@ const contain_canvas = {
     container: {
         caption: "Draw each frame to portion of canvas and each frame, move canvas with css position",
         props: {
+            width: block + "px",
+            height: block + "px",
             overflow: "hidden"
         }
     },
@@ -133,7 +135,10 @@ const contain_canvas = {
 const canvas_redraw = {
     container: {
         caption: "Draw each frame",
-        props: {}
+        props: {
+            width: block + "px",
+            height: block + "px"
+        }
     },
     canvas: {
         qty: 1,
