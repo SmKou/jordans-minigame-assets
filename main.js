@@ -67,9 +67,16 @@ content.addEventListener("change", e => {
 	const select_asset = assets[ui.type][ui.content]
 	switch (ui.type) {
 		case 'anim':
-			const actions = select_asset(main)
-			for (const action of actions)
-				action()
+			const anims = select_asset(main)
+            const actions = anims.add ? anims.procs : anims
+            if (anims.add) {
+                const { ui, cvs, add_draw } = anims.events
+                const { keydown, keyup } = add_draw(ui, cvs)
+                document.addEventListener("keydown", keydown)
+                document.addEventListener("keyup", keyup)
+            }
+            for (const action of actions)
+                action()
 			break;
 		case 'trrn':
 			console.log(select_asset)

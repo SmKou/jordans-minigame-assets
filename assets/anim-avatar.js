@@ -174,8 +174,12 @@ const generate = main => {
     }
     main.append(move_samples_grid)
 
-    const avatar_sx = create_section()
-    const max = Math.max(dir.left, dir.up)
+    const avatar_sx = create_section({
+        height: block * 3 + "px",
+        justifyContent: "center",
+        border: "1px solid green"
+    }, true)
+    const max = Math.max(dir.left.length, dir.up.length)
     const avatar = create_container("Animated avatar", {
         width: block,
         height: block,
@@ -195,34 +199,95 @@ const generate = main => {
         ctx.drawImage(dir.down[i](), block * i, block * 2)
     avatar.append(cvs)
     avatar_sx.append(avatar)
+    const move = {
+        right: dir.right.length,
+        up: dir.up.length,
+        down: dir.down.length
+    }
+    console.log(move)
     const ui = {
         fps_interval: 200,
         frame: 0,
         dir: 'idle',
         then: Date.now(),
-        elapsed: 0
+        elapsed: 0,
+        cvs
     }
-    const move = ['right', 'up', 'down']
-    const draw = () => {
-        ui.id = requestAnimationFrame(draw)
-        ui.now = Date.now()
-        ui.elapsed = ui.now - ui.then
-        if (ui.elapsed > ui.fps_interval) {
-            ui.then = ui.now - (ui.elapsed % ui.fps_interval)
-            if (ui.dir === "idle") {
-                cancelAnimationFrame(ui.id)
+    const add_draw = (ui, cvs) => {
+        const key_states = {
+            w: false,
+            a: false,
+            s: false,
+            d: false
+        }
+        const update = key => {
+            if (!['w', 'a', 's', 'd'].includes(key))
                 return;
+            key_states[key] = true
+            switch (key) {
+                case "w":
+                    ui.frame = 0
+                    ui.dir = "up"
+                    return;
+                case "a":
+                    ui.frame = move.right - 1
+                    ui.dir = "left"
+                    return;
+                case "s":
+                    ui.frame = 0
+                    ui.dir = "down"
+                    return;
+                case "d":
+                    ui.frame = 0
+                    ui.dir = "right"
             }
-            // const row = ui.dir === "left" ? 0 : move.indexOf(ui.dir)
-            // const dt = ui.dir === "left" ? -1 : 1
-            // cvs.style.top = `${-block * row}px`
-            // cvs.style.left = `${-block * ui.frame}px`
-            // ui.frame += dt
-            // if (Math.absolute)
+        }
+        const stop = key => {
+            key_states[key] = false
+            if (!Object.values(key_states).filter(ks => ks).length)
+                ui.dir = "idle"
+        }
+        const draw = () => {
+            ui.id = requestAnimationFrame(draw)
+            ui.now = Date.now()
+            ui.elapsed = ui.now - ui.then
+            if (ui.elapsed > ui.fps_interval) {
+                ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+                if (ui.dir === "idle") {
+                    cancelAnimationFrame(ui.id)
+                    cvs.style.top = 0
+                    cvs.style.left = 0
+                    return;
+                }
+                const row = ui.dir === "left" ? 0 : Object.keys(move).indexOf(ui.dir)
+                const dt = ui.dir === "left" ? -1 : 1
+                cvs.style.top = (-block * row) + "px"
+                cvs.style.left = (-block * ui.frame) + "px"
+                console.log(dt, ui.frame)
+                ui.frame += dt
+                if (ui.dir === "left" && ui.frame < 0)
+                    ui.frame = move.right - 1
+                else if (ui.frame >= move[ui.dir])
+                    ui.frame = 0
+            }
+        }
+
+        return {
+            keydown: e => {
+                if (key_states[e.key])
+                    return;
+                update(e.key)
+                draw()
+            },
+            keyup: e => {
+                stop(e.key)
+            }
         }
     }
+    main.append(avatar_sx)
+    
 
-    return procs
+    return { add: true, procs, events: { ui, cvs, add_draw } }
 }
 
 export default generate
