@@ -264,6 +264,11 @@ const generate = main => {
 
         const speed = 2
 
+        /*  Note
+            Resolve movement inconsistences with animation
+            - moves during middle frame
+        */
+
         const draw = () => {
             ui.id = requestAnimationFrame(draw)
             ui.now = Date.now()
@@ -299,7 +304,7 @@ const generate = main => {
                         break;
                     case "up":
                         pos.y -= speed
-                        if (pos.y <= 0) {
+                        if (pos.y - tile <= 0) {
                             pos.y = tile
                             ui.dir = "idle"
                             return;
