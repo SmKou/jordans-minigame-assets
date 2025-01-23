@@ -70,8 +70,8 @@ content.addEventListener("change", e => {
 			const anims = select_asset(main)
             const actions = anims.add ? anims.procs : anims
             if (anims.add) {
-                const { ui, cvs, add_draw } = anims.events
-                const { keydown, keyup } = add_draw(ui, cvs)
+                const { ui, cvs, pos, wrapper, add_draw } = anims.events
+                const { keydown, keyup } = add_draw(ui, cvs, pos, wrapper)
                 document.addEventListener("keydown", keydown)
                 document.addEventListener("keyup", keyup)
             }

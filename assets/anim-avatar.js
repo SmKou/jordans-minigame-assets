@@ -176,16 +176,26 @@ const generate = main => {
 
     const avatar_sx = create_section({
         height: block * 3 + "px",
-        justifyContent: "center",
-        border: "1px solid green"
-    }, true)
-    const max = Math.max(dir.left.length, dir.up.length)
+        border: "1px solid green",
+        position: "relative"
+    })
+    const wrapper = document.createElement("div")
+    wrapper.style.width = block + "px"
+    wrapper.style.height = block + "px"
+    wrapper.style.position = "absolute"
+    const pos = {
+        x: tile,
+        y: tile
+    }
+    wrapper.style.top = (pos.x - tile) + "px"
+    wrapper.style.left = (pos.y - tile) + "px"
+    
     const avatar = create_container("Animated avatar", {
         width: block,
         height: block,
-        border: "1px solid red",
         overflow: "hidden"
     })
+    const max = Math.max(dir.left.length, dir.up.length)
     const cvs = document.createElement("canvas")
     cvs.width = block * max
     cvs.height = block * 3
@@ -198,28 +208,31 @@ const generate = main => {
     for (let i = 0; i < dir.down.length; ++i)
         ctx.drawImage(dir.down[i](), block * i, block * 2)
     avatar.append(cvs)
-    avatar_sx.append(avatar)
+    wrapper.append(avatar)
+    avatar_sx.append(wrapper)
+    
     const move = {
         right: dir.right.length,
         up: dir.up.length,
         down: dir.down.length
     }
-    console.log(move)
+
     const ui = {
         fps_interval: 200,
         frame: 0,
         dir: 'idle',
         then: Date.now(),
-        elapsed: 0,
-        cvs
+        elapsed: 0
     }
-    const add_draw = (ui, cvs) => {
+
+    const add_draw = (ui, cvs, pos, wrapper) => {
         const key_states = {
             w: false,
             a: false,
             s: false,
             d: false
         }
+
         const update = key => {
             if (!['w', 'a', 's', 'd'].includes(key))
                 return;
@@ -242,28 +255,71 @@ const generate = main => {
                     ui.dir = "right"
             }
         }
+
         const stop = key => {
             key_states[key] = false
             if (!Object.values(key_states).filter(ks => ks).length)
                 ui.dir = "idle"
         }
+
+        const speed = 2
+
         const draw = () => {
             ui.id = requestAnimationFrame(draw)
             ui.now = Date.now()
             ui.elapsed = ui.now - ui.then
             if (ui.elapsed > ui.fps_interval) {
                 ui.then = ui.now - (ui.elapsed % ui.fps_interval)
+
                 if (ui.dir === "idle") {
                     cancelAnimationFrame(ui.id)
                     cvs.style.top = 0
                     cvs.style.left = 0
                     return;
                 }
+
+                switch (ui.dir) {
+                    case "left":
+                        pos.x -= speed
+                        if (pos.x - tile <= 0) {
+                            pos.x = tile
+                            ui.dir = "idle"
+                            return;
+                        }
+                        wrapper.style.left = pos.x - tile + "px"
+                        break;
+                    case "right":
+                        pos.x += speed
+                        if (pos.x + tile >= avatar_sx.clientWidth) {
+                            pos.x = avatar_sx.clientWidth - tile
+                            ui.dir = "idle"
+                            return;
+                        }
+                        wrapper.style.left = pos.x - tile + "px"
+                        break;
+                    case "up":
+                        pos.y -= speed
+                        if (pos.y <= 0) {
+                            pos.y = tile
+                            ui.dir = "idle"
+                            return;
+                        }
+                        wrapper.style.top = pos.y - tile + "px"
+                        break;
+                    case "down":
+                        pos.y += speed
+                        if (pos.y + tile >= avatar_sx.clientHeight) {
+                            pos.y = avatar_sx.clientHeight - tile
+                            ui.dir = "idle"
+                            return;
+                        }
+                        wrapper.style.top = pos.y - tile + "px"
+                }
+
                 const row = ui.dir === "left" ? 0 : Object.keys(move).indexOf(ui.dir)
                 const dt = ui.dir === "left" ? -1 : 1
                 cvs.style.top = (-block * row) + "px"
                 cvs.style.left = (-block * ui.frame) + "px"
-                console.log(dt, ui.frame)
                 ui.frame += dt
                 if (ui.dir === "left" && ui.frame < 0)
                     ui.frame = move.right - 1
@@ -287,7 +343,7 @@ const generate = main => {
     main.append(avatar_sx)
     
 
-    return { add: true, procs, events: { ui, cvs, add_draw } }
+    return { add: true, procs, events: { ui, cvs, pos, wrapper, add_draw } }
 }
 
 export default generate
