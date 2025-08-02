@@ -16,7 +16,8 @@ const erase = () => {
 }
 
 const assets = {
-	anim: { sprite, max: max_sprites, avatar }
+	anim: { sprite, max: max_sprites, avatar },
+	tile: {}
 }
 
 const clear = (e) => {
@@ -65,6 +66,7 @@ content.addEventListener("change", e => {
 	clear()
 
 	const select_asset = assets[ui.type][ui.content]
+
 	switch (ui.type) {
 		case 'anim':
 			const anims = select_asset(main)
@@ -78,18 +80,19 @@ content.addEventListener("change", e => {
             for (const action of actions)
                 action()
 			break;
-		case 'trrn':
-			console.log(select_asset)
-			break;
-        case 'figs':
-            if (ui.content === "player") {
-                select_asset(main)
-            }
-            break;
-        case 'geos':
-            break;
-        case 'info':
-            break;
+		case 'tile':
+		// case 'trrn':
+		// 	console.log(select_asset)
+		// 	break;
+  //       case 'figs':
+  //           if (ui.content === "player") {
+  //               select_asset(main)
+  //           }
+  //           break;
+  //       case 'geos':
+  //           break;
+  //       case 'info':
+  //           break;
 	}
 })
 
