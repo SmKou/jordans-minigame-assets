@@ -1,3 +1,25 @@
+/* Note: orientation
+ * | 2 | 1 |
+ * |-1 | 0 |
+ * 21: up / N
+ * 20: left / W
+ * 10: right / E
+ * -10: down / S
+ * based on: "blood types"
+ * |AB | B |
+ * | A | O |
+ * used for
+ * - gender
+ * | intersex | female |
+ * |   male   |  none  |
+ * - variants
+ * |   shiny  |  sweet |
+ * |  regular | legend |
+ * - path
+ * |  shadow  |  dark  |
+ * |   light  |  none  |
+ */
+
 export const sizes = {
     block: 32,
     tile: 16,
