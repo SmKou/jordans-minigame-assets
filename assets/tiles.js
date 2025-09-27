@@ -63,5 +63,27 @@ const long_brick = (side, edge = 0) => {
 
 const short_brick = (side, edge) => {
 	const { cvs, ctx } = init()
+	switch (edge) {
+		case -1:
+			ctx.lineTo(0, block)
+			ctx.lineTo(block, block)
+			break;
+		case 0:
+			ctx.moveTo(0, block)
+			ctx.lineTo(block, block)
+			ctx.lineTo(block, 0)
+			break;
+		case 1:
+			ctx.lineTo(block, 0)
+			ctx.lineTo(block, block)
+			break;
+		case 2:
+			ctx.moveTo(0, block)
+			ctx.lineTo(0,0)
+			ctx.lineTo(block, 0)
+			break;
+		case -10:
+			ctx.lineTo(0, block)
 
+	}
 }
