@@ -1,6 +1,5 @@
-import sprite from './assets/anim-sprite.js'
-import max_sprites from './assets/anim-max.js'
-import avatar from './assets/anim-avatar.js'
+import animReAvatar from "./assets/anim-re-avatar"
+import tiles from "./assets/bg-tiles"
 
 const types = document.getElementById("asset-type-select")
 const content = document.getElementById("asset-select")
@@ -16,12 +15,13 @@ const erase = () => {
 }
 
 const assets = {
-	anim: { sprite, max: max_sprites, avatar },
-	tile: {}
+	anim: { avatar: animReAvatar },
+	bg: { tiles }
 }
 
 const clear = (e) => {
-	if (!e) e = main
+	if (!e)
+		e = main
 	while (e.firstChild)
 		e.removeChild(e.firstChild)
 }
@@ -36,6 +36,7 @@ types.addEventListener("change", e => {
 	erase()
 	ui.type = e.target.value
 	clear(content)
+
 	if (!ui.type) {
 		content.append(add_option("Select an asset type first"))
 		return;
@@ -63,43 +64,26 @@ types.addEventListener("change", e => {
 
 content.addEventListener("change", e => {
 	ui.content = e.target.value
-	clear()
+	clear(main)
 
 	const select_asset = assets[ui.type][ui.content]
 
 	switch (ui.type) {
 		case 'anim':
 			const anims = select_asset(main)
-            const actions = anims.add ? anims.procs : anims
-            if (anims.add) {
-                const { ui, cvs, pos, wrapper, add_draw } = anims.events
-                const { keydown, keyup } = add_draw(ui, cvs, pos, wrapper)
-                document.addEventListener("keydown", keydown)
-                document.addEventListener("keyup", keyup)
-            }
-            for (const action of actions)
-                action()
+			for (const anim of anims)
+				anim()
 			break;
-		case 'tile':
-		// case 'trrn':
-		// 	console.log(select_asset)
-		// 	break;
-  //       case 'figs':
-  //           if (ui.content === "player") {
-  //               select_asset(main)
-  //           }
-  //           break;
-  //       case 'geos':
-  //           break;
-  //       case 'info':
-  //           break;
+		case 'bg':
+			select_asset(main)
+			break;
 	}
 })
 
 // Quick select: used for graphic debugging
 
-types.value = "anim"
+types.value = "bg"
 types.dispatchEvent(new Event("change"))
 
-content.value = "avatar"
+content.value = "tiles"
 content.dispatchEvent(new Event("change"))
