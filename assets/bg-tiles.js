@@ -109,7 +109,10 @@ const one_horizontal = () => {
 
 const two_horizontal = () => {
 	const { cvs, ctx, end } = ocvs()
-
+	ctx.moveTo(0, block / 3)
+	ctx.lineTo(block, block / 3)
+	ctx.moveTo(block, block * 2 / 3)
+	ctx.lineTo(0, block * 2 / 3)
 	end()
 	return cvs
 }
@@ -170,6 +173,14 @@ export default function(main) {
 		one_horizontal_bordered: {
 			caption: "horizontal stripe bordered",
 			draw: () => border(one_horizontal)
+		},
+		two_horizontal: {
+			caption: "two horizontal stripes (thirds)",
+			draw: two_horizontal
+		},
+		two_horizontal_bordered: {
+			caption: "two horizontal stripes bordered (thirds)",
+			draw: () => border(two_horizontal)
 		},
 		mini_tatami: {
 			caption: "mini tatami - 20: vertical two strip, -11: horizontal two strip",
