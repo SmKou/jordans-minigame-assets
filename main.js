@@ -1,5 +1,6 @@
 import animReAvatar from "./assets/anim-re-avatar"
 import tiles from "./assets/bg-tiles"
+import tiles_2 from "./assets/bg-tiles-013034"
 
 const types = document.getElementById("asset-type-select")
 const content = document.getElementById("asset-select")
@@ -16,7 +17,7 @@ const erase = () => {
 
 const assets = {
 	anim: { avatar: animReAvatar },
-	bg: { tiles }
+	bg: { tiles, tiles2: tiles_2 }
 }
 
 const clear = (e) => {
