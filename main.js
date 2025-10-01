@@ -1,6 +1,7 @@
 import animReAvatar from "./assets/anim-re-avatar"
 import tiles from "./assets/bg-tiles"
-import tiles_2 from "./assets/bg-tiles-013034"
+import tiles2 from "./assets/bg-tiles-013034"
+import corners from "./assets/bg-tile-corners"
 
 const types = document.getElementById("asset-type-select")
 const content = document.getElementById("asset-select")
@@ -17,7 +18,7 @@ const erase = () => {
 
 const assets = {
 	anim: { avatar: animReAvatar },
-	bg: { tiles, tiles2: tiles_2 }
+	bg: { tiles, tiles2: tiles2, corners }
 }
 
 const clear = (e) => {
@@ -86,5 +87,5 @@ content.addEventListener("change", e => {
 types.value = "bg"
 types.dispatchEvent(new Event("change"))
 
-content.value = "tiles"
+content.value = "corners"
 content.dispatchEvent(new Event("change"))
